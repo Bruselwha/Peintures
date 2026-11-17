@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Arij Color · dashboard.js
+   w Arij Color · dashboard.js
    Panel del negocio + administración (con cobertura de usuarios/negocios).
    ========================================================================== */
 (function (window, document) {
