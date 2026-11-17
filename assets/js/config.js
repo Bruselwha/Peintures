@@ -28,7 +28,7 @@
 
     // Slug del catálogo que se abre desde la home. Si lo rellenas, la home
     // redirige directamente al catálogo (la web solo muestra el catálogo).
-    catalogSlug: 'https://peintures.arijcolor.com/catalogo?b=peintures/',
+    catalogSlug: 'https://peintures.arijcolor.com/catalogo?b=peintures',
 
     // Traducción automática (botón «Traducir con IA»). MyMemory no necesita
     // clave; si pones un correo, amplía la cuota diaria anónima.
