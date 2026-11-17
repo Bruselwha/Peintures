@@ -2439,7 +2439,7 @@
         '<label class="radio"><input type="radio" name="odv" value="custom"' + (draft.delivery === 'custom' ? ' checked' : '') + '> ' + t('set.delivery') + '</label>' +
         field('Tarifa (' + draft.currency + ')', '<input type="number" data-o="delivery_fee" value="' + draft.delivery_fee + '">') +
         field('Plazo', '<input data-o="delivery_time" value="' + esc(draft.delivery_time) + '">') +
-        '<div class="chips" data-o-pays>' + ['Efectivo1', 'Transferencia bancaria', 'Tarjeta', 'Pago al recibir'].map(function (p) {
+        '<div class="chips" data-o-pays>' + ['Efectivo', 'Transferencia bancaria', 'Tarjeta', 'Pago al recibir'].map(function (p) {
           return '<button type="button" class="chip' + (draft.payments.indexOf(p) >= 0 ? ' active' : '') + '" data-op="' + esc(p) + '">' + p + '</button>';
         }).join('') + '</div>';
       else body.innerHTML = '<div class="onb-done"><div class="done-icon">🎉</div><h2>' + t('onb.done') + '</h2><p>' + t('onb.done.sub') + '</p>' +
