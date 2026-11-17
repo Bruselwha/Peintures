@@ -17,13 +17,13 @@
 
     // --- Dominio público (solo el host, sin https:// ni barra final) ------
     // Si está vacío se detecta automáticamente del dominio actual.
-    publicDomain: 'arijcolor.com',
+    publicDomain: 'peintures.arijcolor.com',
 
     // --- Ajustes generales -------------------------------------------------
     defaultLang: 'es',
     languages: ['es', 'fr', 'ar'],
     defaultCurrency: 'MAD',
-    supportWhatsapp: '+212 619 539 763',  // WhatsApp de soporte del producto
+    supportWhatsapp: '+212 670 964 030',  // WhatsApp de soporte del producto
     supportEmail: 'contact@arijcolor.com',
 
     // Slug del catálogo que se abre desde la home. Si lo rellenas, la home
