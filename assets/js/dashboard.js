@@ -1528,7 +1528,7 @@
     }
     else if (id === 'payments') body =
       card(t('set.payments'), t('set.payments.desc'),
-        '<div class="chips" data-pays data-no-i18n>' + ['Efectivo', 'Transferencia bancaria', 'Tarjeta', 'Pago al recibir'].map(function (p) {
+        '<div class="chips" data-pays data-no-i18n>' + ['Efectivo1', 'Transferencia bancaria', 'Tarjeta', 'Pago al recibir'].map(function (p) {
           var on = (b.payments || []).indexOf(p) >= 0;
           return '<button type="button" class="chip' + (on ? ' active' : '') + '" data-pay="' + esc(p) + '">' + p + '</button>';
         }).join('') + '</div>' + field('Notas', '<textarea data-f="payment_notes" rows="2">' + esc(b.payment_notes || '') + '</textarea>'));
