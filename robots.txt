@@ -3,4 +3,4 @@ Allow: /
 Disallow: /dashboard
 Disallow: /login
 
-Sitemap: https://arijcolor.com/sitemap.xml
+Sitemap: https://peintures.arijcolor.com/sitemap.xml

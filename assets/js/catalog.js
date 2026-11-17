@@ -71,6 +71,10 @@
 
     // Cabecera
     var brand = $('[data-cat-brand]');
+    // El logo lleva al catálogo publicado del negocio.
+    if (brand && brand.tagName === 'A') {
+      brand.href = CW.absUrl('catalogo.html') + '?b=' + encodeURIComponent(b.slug || '');
+    }
     brand.innerHTML =
       (b.logo_url ? '<img src="' + esc(b.logo_url) + '" alt="" class="cat-logo">' : '<span class="cat-logo ph" style="background:' + esc(b.brand_color) + '">' + esc((CW.tx(b, 'name') || 'M').charAt(0)) + '</span>') +
       '<div><b>' + esc(CW.tx(b, 'name')) + '</b>' + (CW.tx(b, 'description') ? '<small>' + esc(CW.tx(b, 'description')) + '</small>' : '') + '</div>';
@@ -125,6 +129,7 @@
 
     root.innerHTML = hero + info +
       '<section class="wrap cat-grid" data-grid></section>' +
+      contactHTML() +
       '<footer class="cat-footer"><div class="wrap"><div>' + esc(CW.tx(b, 'name')) + ' · Arij Color</div>' +
         '<nav class="cat-policies">' +
           (S.portfolio.length ? '<a href="' + esc(CW.url('porfolio.html') + '?b=' + encodeURIComponent(b.slug || '')) + '">' + t('port.link') + '</a>' : '') +
@@ -136,6 +141,32 @@
     bindFilters();
     drawGrid();
     updateCartUI();
+  }
+
+  // Sección de contacto justo encima del pie, con el color de los botones.
+  function contactHTML() {
+    var b = S.biz;
+    var digits = String(b.whatsapp || '').replace(/[^\d]/g, '');
+    if (digits.length < 8) digits = String((CW.config && CW.config.supportWhatsapp) || '').replace(/[^\d]/g, '');
+    var wa = digits ? 'https://wa.me/' + digits + '?text=' + encodeURIComponent(t('cc.waMsg')) : '';
+    var names = String(t('as.days')).split(',');
+    var work = (b.work_days || [1, 2, 3, 4, 5, 6]).slice().sort();
+    var days = work.map(function (i) { return names[i] || ''; }).filter(Boolean).join(', ');
+    var hours = days ? days + ' · ' + (b.open_time || '') + ' – ' + (b.close_time || '') : '';
+    var where = [b.address, b.city, b.region].filter(Boolean).join(', ');
+
+    return '<section class="cat-contact" id="contacto"><div class="wrap cc-inner">' +
+      '<div class="cc-copy">' +
+        '<span class="cc-kicker">' + t('cc.kicker') + '</span>' +
+        '<h2>' + t('cc.title') + '</h2>' +
+        '<p>' + t('cc.sub') + '</p>' +
+        (wa ? '<a class="btn wa lg" href="' + wa + '" target="_blank" rel="noopener">💬 ' + t('cc.wa') + '</a>' : '') +
+      '</div>' +
+      '<ul class="cc-facts">' +
+        (where ? '<li><i>📍</i><div><b>' + t('cc.where') + '</b><span>' + esc(where) + '</span></div></li>' : '') +
+        (hours ? '<li><i>🕒</i><div><b>' + t('cc.hours') + '</b><span>' + esc(hours) + '</span></div></li>' : '') +
+      '</ul>' +
+      '</div></section>';
   }
 
   function hexSoft(hex) {
@@ -176,7 +207,7 @@
     } else {
       catOpts += cats.map(opt).join('');
     }
-    var active = (showTypes && S.filterType !== 'all') || S.filterCat || S.q;
+    var active = (showTypes && S.filterType !== 'all') || S.filterCat;
     return '<div class="filter-inner" data-filters>' +
       (showTypes ? '<select class="cat-type" data-ftype aria-label="' + t('prod.type') + '">' +
         '<option value="all"' + (S.filterType === 'all' ? ' selected' : '') + '>' + t('common.all') + '</option>' +
@@ -184,7 +215,6 @@
         '<option value="service"' + (S.filterType === 'service' ? ' selected' : '') + '>' + t('cat.public.services') + '</option>' +
       '</select>' : '') +
       (cats.length ? '<select data-fcat aria-label="' + t('common.category') + '">' + catOpts + '</select>' : '') +
-      '<input class="search" data-fq type="search" aria-label="' + t('cat.public.search') + '" placeholder="' + t('cat.public.search') + '" value="' + esc(S.q) + '">' +
       (active ? '<button class="btn ghost small" data-fclear>' + t('cat.public.clear') + '</button>' : '') +
       '</div>';
   }
@@ -193,8 +223,7 @@
     var ft = $('[data-ftype]');
     if (ft) ft.addEventListener('change', function () { S.filterType = ft.value; S.filterCat = ''; rerenderFilters(); });
     var fc = $('[data-fcat]'); if (fc) fc.addEventListener('change', function () { S.filterCat = fc.value; drawGrid(); });
-    var q = $('[data-fq]'); if (q) q.addEventListener('input', function () { S.q = q.value; drawGrid(); });
-    var cl = $('[data-fclear]'); if (cl) cl.addEventListener('click', function () { S.filterType = 'all'; S.filterCat = ''; S.q = ''; rerenderFilters(); });
+    var cl = $('[data-fclear]'); if (cl) cl.addEventListener('click', function () { S.filterType = 'all'; S.filterCat = ''; rerenderFilters(); });
   }
   function rerenderFilters() {
     var menu = $('[data-cat-menu]');
@@ -211,9 +240,6 @@
     if (S.filterCat) list = list.filter(function (p) { return p.category_id === S.filterCat; });
     // Nota: una categoría desactivada desaparece del selector, pero sus
     // artículos siguen visibles en «Todas».
-    if (S.q) { var q = S.q.toLowerCase(); list = list.filter(function (p) {
-      return String(CW.tx(p, 'name') || '').toLowerCase().includes(q) || String(CW.tx(p, 'description') || '').toLowerCase().includes(q);
-    }); }
     list.sort(function (a, b) { return (a.sort_order || 0) - (b.sort_order || 0); });
     return list;
   }

@@ -110,3 +110,12 @@
 @media (prefers-reduced-motion: reduce) {
   .asst-panel, .asst-fab { transition: none; }
 }
+
+/* Botón de reiniciar conversación */
+.asst-head .asst-reset {
+  margin-inline-start: auto; width: 34px; height: 34px; border-radius: 10px;
+  font-size: 1.05rem; line-height: 1; color: #fff; background: rgba(255,255,255,.14);
+}
+.asst-head .asst-reset:hover { background: rgba(255,255,255,.26); color: #fff; }
+.asst-head .icon-btn { margin-inline-start: 0; }
+.asst-chip { line-height: 1.3; }

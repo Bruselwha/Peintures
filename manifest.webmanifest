@@ -1,8 +1,8 @@
 {
-  "name": "Arij Color",
-  "short_name": "WA Maroc",
+  "name": "Peintures Arij Color",
+  "short_name": "Arij Color",
   "description": "Catálogos online con pedidos por WhatsApp.",
-  "start_url": "./index.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f7f7fb",

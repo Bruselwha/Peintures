@@ -30,6 +30,7 @@
         '<header class="asst-head">' +
           '<div class="asst-avatar" data-asst-avatar>🤖</div>' +
           '<div class="asst-title"><b data-asst-name>' + t('as.title') + '</b><small>' + t('as.online') + '</small></div>' +
+          '<button class="icon-btn asst-reset" data-asst-reset type="button" title="' + t('as.reset') + '" aria-label="' + t('as.reset') + '">↺</button>' +
           '<button class="icon-btn" data-asst-close aria-label="' + t('common.close') + '">✕</button>' +
         '</header>' +
         '<div class="asst-msgs" data-asst-msgs aria-live="polite"></div>' +
@@ -48,10 +49,12 @@
       form: wrap.querySelector('[data-asst-form]'),
       input: wrap.querySelector('[data-asst-input]'),
       name: wrap.querySelector('[data-asst-name]'),
-      avatar: wrap.querySelector('[data-asst-avatar]')
+      avatar: wrap.querySelector('[data-asst-avatar]'),
+      reset: wrap.querySelector('[data-asst-reset]')
     };
     A.els.fab.addEventListener('click', function () { setOpen(!A.opened); });
     wrap.querySelector('[data-asst-close]').addEventListener('click', function () { setOpen(false); });
+    A.els.reset.addEventListener('click', function () { reset(); });
     A.els.form.addEventListener('submit', function (e) { e.preventDefault(); send(A.els.input.value); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && A.opened) setOpen(false); });
   }
@@ -88,12 +91,21 @@
       A.els.msgs.appendChild(b); A.els.msgs.scrollTop = A.els.msgs.scrollHeight;
     } else if (!on && ex) { ex.remove(); }
   }
+  // Cada opción es un texto o un objeto {label, value, action}. Las preguntas
+  // del asistente se contestan pulsando botones; el campo de texto sigue
+  // disponible para escribir libremente.
   function setQuick(list) {
     A.els.quick.innerHTML = '';
-    list.forEach(function (label) {
+    (list || []).forEach(function (item) {
+      var label = (typeof item === 'string') ? item : item.label;
+      var value = (typeof item === 'string') ? item : (item.value || item.label);
+      var action = (typeof item === 'object') ? item.action : null;
       var c = document.createElement('button');
       c.type = 'button'; c.className = 'asst-chip'; c.textContent = label;
-      c.addEventListener('click', function () { send(label); });
+      c.addEventListener('click', function () {
+        if (action) { echo(label); action(); return; }
+        send(value, label);
+      });
       A.els.quick.appendChild(c);
     });
   }
@@ -140,10 +152,10 @@
     return '<span class="prod">• <b>' + esc(p.name) + '</b> — ' + price + extra + '</span>';
   }
 
-  function send(raw) {
+  function send(raw, label) {
     var msg = String(raw || '').trim();
     if (!msg) return;
-    echo(msg);
+    echo(label || msg);
     A.els.input.value = '';
     typing(true);
     setTimeout(function () { typing(false); respond(msg); }, 420);
@@ -155,7 +167,7 @@
     A.biz = d.biz;
 
     // Flujo de recopilación de datos
-    if (A.state.indexOf('lead_') === 0) return handleLead(msg);
+    if (A.state === 'lead') return handleLead(msg);
 
     // Búsqueda guiada
     if (A.state === 'await_search') {
@@ -193,7 +205,7 @@
     if (A.els.name) A.els.name.textContent = t('as.title') + (name ? ' · ' + name : '');
     if (A.els.avatar && d.biz) A.els.avatar.textContent = (d.biz.name || 'M').trim().charAt(0).toUpperCase();
     say(t('as.greet', { name: name }),
-      { quick: [t('as.q.cats'), t('as.q.search'), t('as.q.hours'), t('as.q.order')] });
+      { quick: [t('as.q.order'), t('as.q.cats'), t('as.q.hours'), t('as.q.search')] });
   }
 
   function showProducts(list) {
@@ -248,61 +260,158 @@
   }
 
   // ----------------------------------------------------- Recogida de datos
+  // Flujo guiado: se avanza pulsando botones y se termina enviando la
+  // solicitud a WhatsApp del negocio.
   function startLead() {
-    A.state = 'lead_name'; A.lead = {}; A.saved = false;
-    say(t('as.leadStart'));
+    A.state = 'lead'; A.step = 'need'; A.lead = {}; A.saved = false;
+    say(t('as.leadNeed'), { quick: needChips() });
+  }
+
+  function needChips() {
+    var d = data();
+    var chips = d.cats.filter(function (c) { return c.active !== false; }).slice(0, 6)
+      .map(function (c) { return { label: CW.tx(c, 'name'), value: CW.tx(c, 'name') }; });
+    chips.push({ label: t('as.other'), value: '__other' });
+    return chips;
+  }
+
+  function askDelivery() {
+    say(t('as.leadDelivery'), { quick: [
+      { label: '🏬 ' + t('as.leadPickup'), value: '__pickup' },
+      { label: '🚚 ' + t('as.leadShip'), value: '__ship' }
+    ] });
+  }
+
+  function askWhen() {
+    say(t('as.leadWhen'), { quick: [
+      { label: t('as.whenToday'), value: '__today' },
+      { label: t('as.whenTomorrow'), value: '__tomorrow' },
+      { label: t('as.whenWeek'), value: '__week' },
+      { label: t('as.whenNoRush'), value: '__norush' }
+    ] });
   }
 
   function handleLead(msg) {
-    if (A.state === 'lead_name') {
-      A.lead.name = msg; A.state = 'lead_phone';
-      say(t('as.leadName', { name: esc(msg) }));
-      return;
+    var v = String(msg || '').trim();
+    if (!v) return;
+    switch (A.step) {
+      case 'need':
+        if (v === '__other') { A.step = 'need_free'; say(t('as.leadNeedFree')); return; }
+        A.lead.need = v; A.step = 'delivery'; askDelivery(); return;
+      case 'need_free':
+        A.lead.need = v; A.step = 'delivery'; askDelivery(); return;
+      case 'delivery':
+        if (v === '__pickup') { A.lead.delivery = 'pickup'; A.step = 'when'; askWhen(); return; }
+        A.lead.delivery = 'ship'; A.step = 'address';
+        say(t('as.leadAddress')); return;
+      case 'address':
+        A.lead.address = v; A.step = 'when'; askWhen(); return;
+      case 'when':
+        A.lead.when = v === '__today' ? t('as.whenToday')
+          : v === '__tomorrow' ? t('as.whenTomorrow')
+          : v === '__week' ? t('as.whenWeek') : t('as.whenNoRush');
+        A.step = 'name';
+        say(t('as.leadStart')); return;
+      case 'name':
+        if (v.length < 2) { say(t('as.leadNameBad')); return; }
+        A.lead.name = v; A.step = 'phone';
+        say(t('as.leadName', { name: esc(v) })); return;
+      case 'phone':
+        if (String(v).replace(/[^\d]/g, '').length < 8) {
+          say(t('as.leadPhoneBad'), { quick: [{ label: '🔄 ' + t('as.restart'), action: reset }] });
+          return;
+        }
+        A.lead.phone = v; A.step = 'confirm';
+        saySummary(); return;
+      default:
+        A.state = 'idle'; A.step = null;
     }
-    if (A.state === 'lead_phone') {
-      A.lead.phone = msg; A.state = 'lead_need';
-      say(t('as.leadPhone'));
-      return;
-    }
-    if (A.state === 'lead_need') {
-      A.lead.need = msg; A.state = 'idle';
-      saveLead();
-      return;
-    }
-    A.state = 'idle';
   }
 
-  function saveLead() {
+  function summaryHTML() {
+    var L = A.lead, rows = [];
+    rows.push(t('as.needLabel') + ': <b>' + esc(L.need || '—') + '</b>');
+    rows.push(t('as.deliveryLabel') + ': <b>' + (L.delivery === 'ship' ? t('as.leadShip') : t('as.leadPickup')) + '</b>');
+    if (L.address) rows.push(t('as.addressLabel') + ': <b>' + esc(L.address) + '</b>');
+    if (L.when) rows.push(t('as.whenLabel') + ': <b>' + esc(L.when) + '</b>');
+    rows.push(t('as.nameLabel') + ': <b>' + esc(L.name || '') + '</b>');
+    rows.push(t('as.phoneLabel') + ': <b>' + esc(L.phone || '') + '</b>');
+    return '<span class="prod">' + rows.join('<br>') + '</span>';
+  }
+
+  function saySummary() {
+    say(t('as.summary') + summaryHTML(), { quick: [
+      { label: '✅ ' + t('as.send'), action: submitLead },
+      { label: '🔄 ' + t('as.restart'), action: reset }
+    ] });
+  }
+
+  // Número del negocio; si está incompleto se usa el de soporte.
+  function phoneDigits(biz) {
+    var d = String((biz && biz.whatsapp) || '').replace(/[^\d]/g, '');
+    if (d.length < 8) d = String((CW.config && CW.config.supportWhatsapp) || '').replace(/[^\d]/g, '');
+    return d;
+  }
+
+  function waLink(biz) {
+    var L = A.lead;
+    var digits = phoneDigits(biz);
+    if (!digits) return null;
+    var msg = '*NUEVA SOLICITUD*\n' +
+      t('as.nameLabel') + ': ' + (L.name || '') + '\n' +
+      t('as.phoneLabel') + ': ' + (L.phone || '') + '\n' +
+      t('as.needLabel') + ': ' + (L.need || '') + '\n' +
+      t('as.deliveryLabel') + ': ' + (L.delivery === 'ship' ? t('as.leadShip') : t('as.leadPickup')) +
+      (L.address ? '\n' + t('as.addressLabel') + ': ' + L.address : '') +
+      (L.when ? '\n' + t('as.whenLabel') + ': ' + L.when : '') +
+      '\n--------------------------------\n' + (biz.name || '');
+    return 'https://wa.me/' + digits + '?text=' + encodeURIComponent(msg);
+  }
+
+  // El botón «Enviar por WhatsApp» abre WhatsApp y guarda el contacto.
+  function submitLead() {
+    var d = data(); if (!d.biz) return;
+    A.state = 'idle'; A.step = null;
+    var wa = waLink(d.biz);
+    if (wa) { try { window.open(wa, '_blank', 'noopener'); } catch (e) {} }
+    saveLead(wa);
+  }
+
+  function saveLead(wa) {
     var d = data();
-    var note = 'Contacto desde el asistente. Necesita: ' + (A.lead.need || '—');
+    var L = A.lead;
+    var note = 'Contacto desde el asistente. Necesita: ' + (L.need || '—') +
+      (L.delivery ? ' · ' + (L.delivery === 'ship' ? 'Envío a domicilio' : 'Recogida en tienda') : '') +
+      (L.when ? ' · ' + L.when : '');
     var order = {
       business_id: d.biz.id, code: CW.store.newOrderCode(),
-      customer_name: A.lead.name || '', customer_phone: A.lead.phone || '',
-      customer_address: '', customer_city: '', note: note,
+      customer_name: L.name || '', customer_phone: L.phone || '',
+      customer_address: L.address || '', customer_city: '', note: note,
       items: [], subtotal: 0, fee: 0, total: 0, status: 'new'
     };
     var save = (d.biz.id === 'demo') ? Promise.resolve(order) : CW.store.createOrder(order);
     save.then(function () { A.saved = true; }).catch(function () { A.saved = false; });
 
-    var wa = d.biz.whatsapp
-      ? CW.api.waLink(d.biz.whatsapp,
-        '*NUEVO CONTACTO*\n' + (A.lead.name || '') + '\nTeléfono: ' + (A.lead.phone || '') +
-        '\nNecesita: ' + (A.lead.need || '') + '\n--------------------------------\nEnviado desde el asistente de ' + d.biz.name)
-      : null;
-
-    var html = t('as.leadDone', { name: esc(A.lead.name || '') }) +
-      '<span class="prod">' + esc(A.lead.name || '') + '<br>' + esc(A.lead.phone || '') + '<br>' + esc(A.lead.need || '') + '</span>';
+    var html = t('as.leadDone', { name: esc(L.name || '') }) + summaryHTML();
     if (wa) html += '<span class="prod">' + t('as.leadWa') + ' <a href="' + wa + '" target="_blank" rel="noopener">' + t('as.waOpen') + '</a></span>';
     else html += '<span class="prod">' + t('as.leadNoWa') + '</span>';
 
-    say(html, { quick: ['Ver categorías', 'Gracias'] });
+    say(html, { quick: [{ label: '🔄 ' + t('as.restart'), action: reset }, t('as.q.cats')] });
+  }
+
+  function reset() {
+    if (!A.els) return;
+    A.state = 'idle'; A.step = null; A.lead = {}; A.saved = false; A.greeted = true;
+    A.els.msgs.innerHTML = ''; A.els.quick.innerHTML = '';
+    greet();
   }
 
   // ---------------------------------------------------------------- Init
   // API pública: la cabecera del catálogo abre el asistente desde su botón.
   CW.assistant = {
     open: function () { if (A.els) setOpen(true); },
-    close: function () { if (A.els) setOpen(false); }
+    close: function () { if (A.els) setOpen(false); },
+    reset: function () { reset(); }
   };
 
   document.addEventListener('DOMContentLoaded', function () {
@@ -312,8 +421,8 @@
       if (!A.els) return;
       A.els.input.placeholder = t('as.placeholder');
       A.els.msgs.innerHTML = ''; A.els.quick.innerHTML = '';
-      A.state = 'idle'; A.lead = {}; A.greeted = true;
-      greet();
+      A.greeted = true;
+      reset();
     });
     // Refresca el nombre cuando el catálogo termine de cargar.
     var tries = 0;

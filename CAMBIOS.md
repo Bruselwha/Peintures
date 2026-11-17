@@ -1,3 +1,89 @@
+# v27 · Instalar app, cabecera, contacto y asistente con botones
+
+## 1. Instalar la app del catálogo en el móvil
+
+- **Aviso** en el catálogo (solo móvil, por encima del carrito y del asistente):
+  «Instala el catálogo · Instalar».
+- **Opción siempre disponible** en el menú móvil: «📲 Instalar app».
+- Android/Chrome: usa el aviso del sistema (`beforeinstallprompt`).
+- iPhone/iPad: Safari no muestra ese aviso, así que se abre una **ayuda con los
+  pasos** («Compartir → Añadir a pantalla de inicio»).
+- No se muestra si la app ya está instalada (`display-mode: standalone`) ni si
+  el usuario la ha descartado.
+- `manifest.webmanifest`: nombre **Peintures Arij Color** / **Arij Color** y
+  `start_url: "./"` (la home redirige al catálogo).
+- `catalogo.html`: etiquetas de iOS (`apple-mobile-web-app-*`) e icono de inicio.
+
+## 2. Logo
+
+- **Texto más grande** en escritorio (1,05 → 1,20 rem) y en móvil (1,08 rem), con
+  más ancho antes de recortar el nombre.
+- El **logo es un enlace** al catálogo publicado:
+  `https://peintures.arijcolor.com/catalogo?b=peintures`. También los logos de la
+  home apuntan ahí.
+
+## 3. Banderas del menú móvil
+
+- El selector de idioma dentro del menú desplegable ocupa ahora **todo el ancho**
+  y las opciones se abren **en línea** (ya no en un desplegable absoluto que
+  quedaba fuera de la pantalla). Igual en la home.
+- Se ven la bandera, el código y el nombre de cada idioma.
+
+## 4. Sin buscador
+
+- Se elimina el campo de búsqueda del catálogo, tanto en escritorio como en
+  móvil (markup, evento y filtrado). Los filtros de tipo y categoría se quedan.
+- El asistente conserva la búsqueda conversacional.
+
+## 5. Sección de contacto
+
+- Nueva sección **justo encima del pie**, con el **color de marca de los botones**
+  (`var(--brand)`): título, texto, botón de WhatsApp y datos de dirección y
+  horario del negocio (se ocultan si no están rellenos).
+
+## 6. Asistente
+
+- Botón **↺ Reiniciar conversación** en la cabecera (y «Empezar de nuevo» al
+  final). Limpia mensajes, estado y datos.
+- Flujo **guiado con botones** hasta enviar por WhatsApp:
+  1. Qué necesitas → botones con las categorías + «Otro»
+  2. Entrega → «Recoger en tienda» / «Envío a domicilio»
+  3. Dirección (solo si es envío)
+  4. ¿Para cuándo? → Hoy / Mañana / Esta semana / Sin prisa
+  5. Nombre y teléfono (se escriben; el teléfono se valida)
+  6. **Resumen** con «✅ Enviar por WhatsApp» o «🔄 Empezar de nuevo»
+- Al enviar: abre WhatsApp con el mensaje completo y guarda el contacto como
+  pedido en el panel.
+- Si el WhatsApp del negocio está incompleto, usa el número de soporte.
+
+## Caché
+
+`CACHE_VERSION` → `arij-v3`. Se suben las versiones `?v=` de `styles.css` (19),
+`home.css` (11), `catalog.css` (12), `assistant.css` (7), `config.js` (11),
+`i18n.js` (22), `common.js` (13), `catalog.js` (19) y `assistant.js` (8).
+
+## Verificación
+
+20 pruebas en jsdom del catálogo (logo, sin buscador, contacto, banderas,
+instalación y flujo completo del asistente) + 6 de instalación PWA
+(Android e iPhone). Todas correctas.
+
+---
+
+# v26 · Dominio peintures.arijcolor.com y home → catálogo
+
+- Todas las URL del proyecto pasan a **https://peintures.arijcolor.com/**:
+  `canonical`, `hreflang`, `og:url`, `og:image`, JSON-LD, `robots.txt`,
+  `sitemap.xml` y la documentación.
+- `assets/js/config.js`: `publicDomain: 'peintures.arijcolor.com'` y
+  `catalogSlug: 'peintures'` (antes tenía una URL completa, así que la home
+  generaba `?b=https%3A%2F%2F…`).
+- La home redirige al catálogo `https://peintures.arijcolor.com/catalogo?b=peintures`
+  (script en el `<head>` de `index.html` + redirección de `/` en `vercel.json`).
+- Los correos `contact@arijcolor.com` no se tocan.
+
+---
+
 # Cambios acumulados (v11 → v13)
 
 ## 1. Menú de Administración que desaparecía
@@ -189,7 +275,7 @@ Preparado para desplegarse como proyecto independiente.
 
 ## Dominio y teléfono
 
-- `publicDomain: 'wa.professionnelsmaroc.click'` en `config.js`.
+- `publicDomain: 'peintures.arijcolor.com'` en `config.js`.
 - `supportWhatsapp: '+212670964030'` (activa el botón flotante de WhatsApp).
 - `canonical`, `og:url`, `og:image`, `hreflang`, `sitemap.xml` y `robots.txt`
   apuntan al dominio nuevo.

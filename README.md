@@ -4,11 +4,12 @@ Plataforma web multiusuario para que cualquier comercio cree su **catálogo onli
 (productos y servicios) y reciba los pedidos **por WhatsApp**. Sin pasarela de pago:
 el pedido se envía como mensaje estructurado al WhatsApp del negocio.
 
-- **Dominio:** https://wa.professionnelsmaroc.click
+- **Dominio:** https://peintures.arijcolor.com
 - **WhatsApp de soporte:** +212 670 964 030
 - HTML, CSS y JavaScript puros. **Sin paso de compilación.**
 - Backend **Supabase** (Postgres + Auth + Storage).
-- PWA (manifest + service worker), listo para **Vercel**.
+- PWA (manifest + service worker), listo para **Vercel**. El catálogo se puede
+  **instalar en el móvil** (aviso propio en Android y ayuda paso a paso en iPhone).
 - Tres idiomas: **español, francés y árabe (RTL)**.
 - Panel del negocio (pedidos, contactos, agenda, ventas, productos, categorías,
   porfolio, biblioteca, ajustes, plan) y **panel de super administración**.
@@ -39,7 +40,7 @@ supabase/*.sql          Migraciones incrementales (proyectos ya existentes)
 
 | Página | URL limpia |
 |---|---|
-| Home | `/` |
+| Home | `/` → redirige a `/catalogo?b=peintures` |
 | Acceso | `/login` |
 | Catálogo de un negocio | `/catalogo?b=slug-del-negocio` |
 | Porfolio de un negocio | `/porfolio?b=slug-del-negocio` |
@@ -68,8 +69,8 @@ supabase/*.sql          Migraciones incrementales (proyectos ya existentes)
    registro sea inmediato (si la dejas activa, el usuario debe confirmar antes
    de poder entrar).
 5. **Authentication → URL Configuration**:
-   - *Site URL*: `https://wa.professionnelsmaroc.click`
-   - *Redirect URLs*: `https://wa.professionnelsmaroc.click/**`
+   - *Site URL*: `https://peintures.arijcolor.com`
+   - *Redirect URLs*: `https://peintures.arijcolor.com/**`
    - (Para probar en local añade también `http://localhost:8080/**`).
 6. **Primer super administrador**: regístrate desde `/login` y luego ejecuta en
    el SQL Editor, cambiando el correo:
@@ -87,7 +88,7 @@ Edita `assets/js/config.js`:
 ```js
 SUPABASE_URL: 'https://TU-PROYECTO.supabase.co',
 SUPABASE_ANON_KEY: 'eyJhbGciOi...',   // clave anon/public, nunca la service_role
-publicDomain: 'wa.professionnelsmaroc.click',
+publicDomain: 'peintures.arijcolor.com',
 supportWhatsapp: '+212670964030',
 ```
 
@@ -103,17 +104,17 @@ supportWhatsapp: '+212670964030',
 
 ### Paso 5 · Cloudflare (dominio)
 
-El dominio `professionnelsmaroc.click` está en Cloudflare y el subdominio que
-usamos es `wa`.
+El dominio `arijcolor.com` está en Cloudflare y el subdominio que usamos es
+`peintures`.
 
 1. En Cloudflare → **DNS → Records → Add record**:
    - **Type:** `CNAME`
-   - **Name:** `wa`
+   - **Name:** `peintures`
    - **Target:** `cname.vercel-dns.com`
    - **Proxy status:** **DNS only** (nube gris) ← importante para que Vercel
      emita el certificado sin conflictos.
 2. En Vercel → **Project → Settings → Domains → Add**:
-   `wa.professionnelsmaroc.click` y pulsa **Add**. Vercel verificará el CNAME y
+   `peintures.arijcolor.com` y pulsa **Add**. Vercel verificará el CNAME y
    emitirá el certificado (puede tardar unos minutos).
 3. Si más adelante quieres activar el proxy de Cloudflare (nube naranja):
    - SSL/TLS → **Full (strict)**
@@ -121,7 +122,7 @@ usamos es `wa`.
 
 ### Paso 6 · Comprobaciones
 
-- `https://wa.professionnelsmaroc.click/` carga la home.
+- `https://peintures.arijcolor.com/` redirige al catálogo del negocio.
 - `/catalogo?b=demo` muestra el catálogo de ejemplo.
 - `/login` permite crear una cuenta; al entrar aparece el asistente de 5 pasos.
 - `/dashboard` muestra el panel; con el `insert` del paso 2.6 aparece

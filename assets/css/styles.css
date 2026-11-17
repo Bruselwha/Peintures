@@ -634,7 +634,7 @@ input.invalid, textarea.invalid, select.invalid { border-color: var(--bad) !impo
 .cat-header { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
 .cat-head-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; }
 .cat-brand { display: flex; align-items: center; gap: 12px; }
-.cat-brand b { display: block; font-size: 1.05rem; }
+.cat-brand b { display: block; font-size: 1.2rem; }
 .cat-brand small { color: var(--muted); font-size: .8rem; }
 .cat-logo { width: 46px; height: 46px; border-radius: 12px; object-fit: cover; }
 .cat-logo.ph { display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 1.2rem; }
@@ -876,3 +876,81 @@ input.invalid, textarea.invalid, select.invalid { border-color: var(--bad) !impo
 .policy-meta { font-size: .8rem; color: var(--muted); margin-bottom: 12px; }
 .policy-foot { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
 .policy-foot a { color: var(--brand); font-weight: 700; font-size: .86rem; }
+
+/* ==========================================================================
+   Logo del catálogo: algo más grande también en móvil y sin cortar el nombre
+   ========================================================================== */
+@media (max-width: 900px) {
+  .cat-brand b { font-size: 1.08rem; }
+  .cat-brand small { font-size: .8rem; }
+  .cat-brand b, .cat-brand small { max-width: 64vw; }
+}
+
+/* ==========================================================================
+   Selector de idioma dentro del menú desplegable del móvil
+   Antes el desplegable de banderas quedaba fuera de la pantalla; ahora ocupa
+   todo el ancho y las opciones se abren en línea, siempre visibles.
+   ========================================================================== */
+@media (max-width: 900px) {
+  .cat-mobile-extra { width: 100%; }
+  .cat-mobile-extra .lang-switch { width: 100%; display: block; padding: 0; border: 0; background: none; }
+  .cat-mobile-extra .lang-dd { width: 100%; }
+  .cat-mobile-extra .lang-dd-btn {
+    width: 100%; justify-content: flex-start; gap: 10px;
+    padding: 12px 14px; border-radius: 12px; background: #fff;
+  }
+  .cat-mobile-extra .lang-code { flex: 1; text-align: start; }
+  .cat-mobile-extra .lang-dd-menu {
+    position: static; inset: auto; width: 100%; min-width: 0;
+    margin-top: 6px; box-shadow: none; border-radius: 12px;
+  }
+  .cat-mobile-extra .lang-dd-menu button { padding: 11px 12px; }
+}
+
+/* ==========================================================================
+   Instalar la app del catálogo (solo móvil)
+   ========================================================================== */
+.pwa-banner.pwa-banner--cat { display: none; }
+.pwa-banner--cat .pwa-ic { font-size: 1.4rem; line-height: 1; }
+.pwa-banner--cat .pwa-tx { flex: 1; min-width: 0; line-height: 1.25; }
+.pwa-banner--cat .pwa-tx b { display: block; font-size: .92rem; }
+.pwa-banner--cat .pwa-tx small { display: block; font-size: .76rem; opacity: .8; }
+.pwa-banner--cat .btn { flex: 0 0 auto; }
+
+@media (max-width: 900px) {
+  /* Por encima del carrito y del asistente flotantes. */
+  .pwa-banner.pwa-banner--cat { inset-block-end: 152px; }
+  .pwa-banner.pwa-banner--cat.show { display: flex; }
+}
+
+/* ==========================================================================
+   Sección de contacto (encima del pie), con el color de los botones
+   ========================================================================== */
+.cat-contact {
+  background: var(--brand);
+  color: #fff;
+  padding: clamp(30px, 5vw, 52px) 0;
+}
+.cc-inner { display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+.cc-copy { max-width: 560px; min-width: 0; }
+.cc-kicker { display: block; font-size: .72rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; opacity: .8; }
+.cc-copy h2 { margin: 6px 0 8px; font-size: clamp(1.4rem, 3vw, 1.95rem); line-height: 1.2; color: #fff; }
+.cc-copy p { margin: 0 0 18px; color: rgba(255,255,255,.88); line-height: 1.6; font-size: .96rem; }
+.cc-facts { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; min-width: 270px; }
+.cc-facts li { display: flex; align-items: flex-start; gap: 12px; }
+.cc-facts i {
+  flex: 0 0 auto; width: 36px; height: 36px; border-radius: 11px;
+  background: rgba(255,255,255,.16); display: grid; place-items: center; font-style: normal;
+}
+.cc-facts b { display: block; font-size: .76rem; letter-spacing: .06em; text-transform: uppercase; opacity: .78; }
+.cc-facts span { font-size: .93rem; }
+@media (max-width: 720px) {
+  .cc-inner { flex-direction: column; align-items: flex-start; gap: 22px; }
+  .cc-facts { width: 100%; min-width: 0; }
+  .cat-contact .btn.wa { width: 100%; justify-content: center; }
+}
+
+/* Ayuda para instalar en iPhone/Android */
+.pwa-help-modal { width: min(430px, 100%); }
+.pwa-steps { margin: 12px 0 0; padding-inline-start: 20px; display: grid; gap: 10px; }
+.pwa-steps li { font-size: .93rem; line-height: 1.5; color: var(--ink-2); }

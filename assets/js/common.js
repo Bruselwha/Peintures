@@ -324,30 +324,70 @@
     },
 
     // ---- PWA -----------------------------------------------------------
+    // Instalación de la app del catálogo: aviso en móvil, botón «Instalar» y
+    // ayuda paso a paso en iPhone/iPad (Safari no muestra el aviso del sistema).
     initPWA: function () {
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
           navigator.serviceWorker.register(CW.url('/sw.js')).catch(function () {});
         });
       }
-      var deferred = null;
+
       var banner = CWU.qs('[data-pwa-banner]');
+      var deferred = null;
+      var ua = navigator.userAgent || '';
+      var isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua) || window.matchMedia('(max-width: 900px)').matches;
+      var installed = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+
+      function dismissed() { try { return !!localStorage.getItem('cw_pwa_dismissed'); } catch (e) { return false; } }
+      function dismiss() { try { localStorage.setItem('cw_pwa_dismissed', '1'); } catch (e) {} }
+      function hide() { if (banner) banner.classList.remove('show'); }
+      function show() { if (banner && isMobile && !installed && !dismissed()) banner.classList.add('show'); }
+
+      function help() {
+        var steps = isIOS
+          ? ['1. ' + CW.t('pwa.ios.1'), '2. ' + CW.t('pwa.ios.2'), '3. ' + CW.t('pwa.ios.3')]
+          : ['1. ' + CW.t('pwa.and.1'), '2. ' + CW.t('pwa.and.2'), '3. ' + CW.t('pwa.and.3')];
+        CWU.modal({
+          className: 'pwa-help-modal',
+          title: CW.t('pwa.help.title'),
+          html: '<p class="muted">' + CW.t('pwa.help.sub') + '</p><ol class="pwa-steps">' +
+            steps.map(function (s) { return '<li>' + CWU.esc(s.replace(/^\d+\.\s*/, '')) + '</li>'; }).join('') + '</ol>'
+        });
+      }
+
       window.addEventListener('beforeinstallprompt', function (e) {
-        e.preventDefault(); deferred = e;
-        if (banner && !localStorage.getItem('cw_pwa_dismissed')) banner.classList.add('show');
+        e.preventDefault(); deferred = e; show();
       });
+      window.addEventListener('appinstalled', function () { deferred = null; dismiss(); hide(); });
+
+      function launch() {
+        if (deferred && deferred.prompt) {
+          deferred.prompt();
+          if (deferred.userChoice && deferred.userChoice.then) {
+            deferred.userChoice.then(function () { deferred = null; hide(); });
+          } else { deferred = null; hide(); }
+        } else {
+          help();
+        }
+      }
+
+      // Accesible desde cualquier botón «Instalar app».
+      CW.pwa = { install: launch, help: help, show: show };
+
       if (banner) {
         var btn = CWU.qs('[data-pwa-install]', banner);
         var no = CWU.qs('[data-pwa-dismiss]', banner);
-        if (btn) btn.addEventListener('click', function () {
-          if (deferred) { deferred.prompt(); deferred = null; }
-          banner.classList.remove('show');
-        });
-        if (no) no.addEventListener('click', function () {
-          banner.classList.remove('show');
-          try { localStorage.setItem('cw_pwa_dismissed', '1'); } catch (e) {}
-        });
+        if (btn) btn.addEventListener('click', launch);
+        if (no) no.addEventListener('click', function () { dismiss(); hide(); });
       }
+      CWU.qsa('[data-pwa-open]').forEach(function (b) {
+        b.addEventListener('click', function () { hide(); launch(); });
+      });
+
+      // Android/Chrome puede tardar en ofrecer el aviso; en iOS nunca llega.
+      setTimeout(show, 2500);
     },
 
     // ---- Varios --------------------------------------------------------

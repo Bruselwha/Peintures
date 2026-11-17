@@ -74,7 +74,7 @@ CW.config = {
   SUPABASE_URL: 'https://TU-PROYECTO.supabase.co',
   SUPABASE_ANON_KEY: 'eyJhbGciOi...la-clave-anon-completa...',
 
-  publicDomain: 'wa.professionnelsmaroc.click',
+  publicDomain: 'peintures.arijcolor.com',
 
   defaultLang: 'es',
   languages: ['es', 'fr', 'ar'],
@@ -110,9 +110,9 @@ con un límite bajo en el plan gratuito, así que para empezar es mejor desactiv
 ### 4.2 URLs del sitio
 
 1. **Authentication** → **URL Configuration**.
-2. **Site URL:** `https://wa.professionnelsmaroc.click`
+2. **Site URL:** `https://peintures.arijcolor.com`
 3. **Redirect URLs** → *Add URL*:
-   - `https://wa.professionnelsmaroc.click/**`
+   - `https://peintures.arijcolor.com/**`
    - `http://localhost:8080/**` (solo si vas a probar en local)
 4. **Save**.
 
@@ -120,7 +120,7 @@ con un límite bajo en el plan gratuito, así que para empezar es mejor desactiv
 
 ## 5. Tu cuenta y el primer super administrador
 
-1. Abre tu web (`https://wa.professionnelsmaroc.click/login`) o, en local,
+1. Abre tu web (`https://peintures.arijcolor.com/login`) o, en local,
    `login.html` → pestaña **Crear cuenta**.
 2. Regístrate con tu correo. El trigger del esquema crea automáticamente:
    - tu fila en `businesses` (con el nombre de negocio que escribas),
@@ -157,7 +157,7 @@ En Supabase:
 
 En la web:
 
-4. `https://wa.professionnelsmaroc.click/` carga la home.
+4. `https://peintures.arijcolor.com/` carga la home.
 5. `/catalogo?b=demo` muestra el catálogo de ejemplo.
 6. `/login` te deja entrar y `/dashboard` abre el panel con tus datos.
 7. Si publicas tu negocio (Ajustes → Enlace, o Administración → Cuentas →

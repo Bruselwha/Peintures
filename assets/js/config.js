@@ -17,7 +17,7 @@
 
     // --- Dominio público (solo el host, sin https:// ni barra final) ------
     // Si está vacío se detecta automáticamente del dominio actual.
-    publicDomain: 'arijcolor.com',
+    publicDomain: 'peintures.arijcolor.com',
 
     // --- Ajustes generales -------------------------------------------------
     defaultLang: 'es',

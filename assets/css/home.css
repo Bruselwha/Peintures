@@ -26,7 +26,7 @@
 /* ---------- Cabecera ---------- */
 .pg-header { position: sticky; top: 0; z-index: 60; background: #fff; border-bottom: 1px solid var(--pg-line); }
 .pg-bar { display: flex; align-items: center; gap: 18px; height: 64px; }
-.pg-logo { display: inline-flex; align-items: center; gap: 9px; font-weight: 800; font-size: 1.05rem; color: var(--pg-ink); }
+.pg-logo { display: inline-flex; align-items: center; gap: 9px; font-weight: 800; font-size: 1.16rem; color: var(--pg-ink); }
 .pg-logo .mark { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; background: var(--pg-brand); color: #fff; font-weight: 900; font-size: .78rem; }
 .pg-logo b { color: var(--pg-brand); }
 .pg-nav { display: flex; gap: 22px; margin-inline: auto; }
@@ -280,4 +280,14 @@
   .pg-compare-card .phone { width: 165px; }
   .pg-float-wa { width: 150px; }
   .pg-footer-grid { grid-template-columns: 1fr; }
+}
+
+/* Logo algo más grande en móvil y banderas del menú siempre visibles */
+@media (max-width: 900px) {
+  .pg-logo { font-size: 1.08rem; }
+  .pg-mobile .lang-switch { width: 100%; align-self: stretch; display: block; padding: 0; border: 0; background: none; }
+  .pg-mobile .lang-dd { width: 100%; }
+  .pg-mobile .lang-dd-btn { width: 100%; justify-content: flex-start; gap: 10px; padding: 11px 14px; border-radius: 12px; }
+  .pg-mobile .lang-code { flex: 1; text-align: start; }
+  .pg-mobile .lang-dd-menu { position: static; inset: auto; width: 100%; min-width: 0; margin-top: 6px; box-shadow: none; border-radius: 12px; }
 }
