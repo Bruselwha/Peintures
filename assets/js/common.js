@@ -145,6 +145,9 @@
         } else {
           L.push('    ' + it.qty + ' x A consultar');
         }
+        if (it.options && it.options.length) {
+          L.push('    ' + it.options.map(function (o) { return o.label + ': ' + o.value; }).join(' · '));
+        }
         if (it.duration || it.modality) L.push('    ' + [it.duration, it.modality].filter(Boolean).join(' · '));
         if (it.appointment && it.appointment.date) L.push('    Cita: ' + it.appointment.date + ' a las ' + it.appointment.time);
         if (it.appointment && it.appointment.notes) L.push('    Detalles: ' + it.appointment.notes);

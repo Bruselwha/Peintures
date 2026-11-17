@@ -103,6 +103,7 @@ create table if not exists public.products (
   modality    text,
   bookable    boolean not null default false,
   requirements text,
+  options     jsonb not null default '{}'::jsonb,  -- {colors:[], sizes:[], liters:[], weights:[]}
   i18n        jsonb not null default '{}'::jsonb,
   created_at  timestamptz not null default now()
 );

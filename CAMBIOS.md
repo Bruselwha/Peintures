@@ -1,3 +1,89 @@
+# v28 · Menú, contacto, reseñas, asistente completo y opciones de producto
+
+## 1. Cambio de idioma en la app instalada
+
+Tres arreglos para que no se quede bloqueada:
+
+- **El menú móvil se cierra** al cambiar de idioma (antes seguía desplegado a
+  pantalla completa y parecía que la app no respondía).
+- El desplegable de banderas cierra bien al tocar fuera: antes el evento seguía
+  apuntando al menú viejo después de repintarlo.
+- **Sin `backdrop-filter` en modo app instalada** (`display-mode: standalone`):
+  en iOS/Android el desenfoque de la cabecera puede dejar la página sin
+  repintar al cambiar de dirección (RTL).
+- Si al repintar ocurriera un error, la página se recarga una vez en lugar de
+  quedarse a medias.
+- El asistente **no borra** un pedido a medio rellenar si cambias de idioma.
+- `CACHE_VERSION` → `arij-v4` para que la app instalada coja esta versión.
+
+## 2. Menú del catálogo
+
+Nueva barra bajo la cabecera, en escritorio y móvil:
+
+**Inicio · Categorías · Reseñas · Contacto** → anclas `#inicio`, `#categorias`,
+`#resenas`, `#contacto`, con desplazamiento compensado por la cabecera fija.
+
+## 3. Contacto
+
+La sección (encima del pie, con el color de los botones) muestra ahora:
+
+- **Teléfono:** +212 670 964 030 (`tel:`)
+- **WhatsApp:** +212 670 964 030 (`wa.me`)
+- **Mail:** contact@arijcolor.com (`mailto:`)
+- **Dirección:** Casablanca, Marruecos
+- Horario del negocio (si está configurado)
+
+## 4. Reseñas
+
+Nueva sección `#resenas` con tres tarjetas (estrellas, texto, nombre y ciudad) y
+un botón «Dejar mi reseña» que abre WhatsApp.
+
+> Los textos son de ejemplo, traducidos a los tres idiomas. Para cambiarlos:
+> nombres y ciudades en `assets/js/catalog.js` (`REVIEWS`) y textos en
+> `assets/js/i18n.js` (`rev.1.text`, `rev.2.text`, `rev.3.text`).
+
+## 5. Asistente
+
+Ahora contesta, en los tres idiomas, sobre:
+
+- **Contacto** (teléfono, correo, dirección y botón de WhatsApp) y ubicación.
+- **Colores, tamaños, litros y pesos** del catálogo y de un artículo concreto.
+- **Disponibilidad**, **ofertas**, **factura**, **devoluciones** y **garantía**.
+- Precios, categorías, entrega, pagos, horarios, servicios y reservas, y sobre
+  el propio negocio.
+- **Búsqueda tolerante**: entiende «pintura blanca» aunque el producto esté en
+  francés («Peinture blanche»), con diccionario de sinónimos y raíces.
+- Nunca se queda callado: si no entiende, ofrece botones útiles.
+- Flujo de pedido por botones (v27) y ↺ reiniciar se mantienen.
+
+## 6. Opciones del producto: color, tamaño, litros y peso
+
+- **Panel → Producto**: nueva tarjeta «Opciones del producto» con cuatro campos
+  (colores, tamaños, litros, pesos). Se escriben separados por comas.
+- **Ficha del producto**: los selectores aparecen solo si ese producto tiene
+  opciones, con la primera opción preseleccionada.
+- **Carrito**: cada combinación es una línea distinta y muestra las opciones
+  elegidas.
+- **WhatsApp**: el mensaje del pedido incluye `Color: Beige · Litros: 4`.
+- **Base de datos:** columna `products.options` (jsonb). Ejecuta
+  `supabase/actualizacion-opciones-producto.sql` (o vuelve a ejecutar
+  `supabase/schema.sql`).
+
+## Caché
+
+`CACHE_VERSION` → `arij-v4`; `styles.css` 20, `catalog.css` 13, `i18n.js` 24,
+`common.js` 14, `catalog.js` 20, `dashboard.js` 21, `assistant.js` 9.
+
+## Verificación
+
+29 pruebas jsdom sobre el catálogo: menú y anclas, contacto (teléfono, WhatsApp,
+correo, dirección), reseñas, selectores de opciones, líneas de carrito por
+combinación, mensaje de WhatsApp con opciones, 9 preguntas al asistente,
+fallback, flujo de pedido, reinicio y cambio de idioma a mitad del pedido. Todo
+correcto, sin errores JS.
+
+---
+
 # v27 · Instalar app, cabecera, contacto y asistente con botones
 
 ## 1. Instalar la app del catálogo en el móvil

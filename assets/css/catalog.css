@@ -250,3 +250,69 @@
   .bk-two { grid-template-columns: 1fr; gap: 0; }
   .bk-modal .cw-modal-body { padding: 14px 16px 16px; }
 }
+
+/* ==========================================================================
+   Menú del catálogo (Inicio · Categorías · Reseñas · Contacto)
+   ========================================================================== */
+.cat-nav { background: #fff; border-bottom: 1px solid var(--line); }
+.cat-nav-inner {
+  display: flex; align-items: center; gap: 4px;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.cat-nav-inner::-webkit-scrollbar { display: none; }
+.cat-nav-inner a {
+  padding: 13px 16px; white-space: nowrap;
+  font-size: .92rem; font-weight: 650; color: var(--ink-2);
+  border-bottom: 2px solid transparent;
+}
+.cat-nav-inner a:first-child { padding-inline-start: 0; }
+.cat-nav-inner a:hover { color: var(--brand); border-bottom-color: var(--brand); }
+
+#inicio, #categorias, #resenas, #contacto { scroll-margin-top: 78px; }
+
+@media (max-width: 720px) {
+  .cat-nav-inner a { padding: 11px 12px; font-size: .9rem; }
+}
+
+/* ==========================================================================
+   Reseñas de clientes
+   ========================================================================== */
+.cat-reviews { padding: clamp(30px, 5vw, 54px) 0; background: var(--bg); }
+.rev-head { max-width: 620px; margin-bottom: 22px; }
+.rev-head .cc-kicker { color: var(--brand); }
+.rev-head h2 { margin: 6px 0 8px; font-size: clamp(1.4rem, 3vw, 1.9rem); line-height: 1.2; }
+.rev-head p { margin: 0; color: var(--ink-2); line-height: 1.6; }
+.rev-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.rev-card {
+  background: #fff; border: 1px solid var(--line); border-radius: 18px;
+  padding: 18px 20px; box-shadow: var(--shadow-sm);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.rev-stars { color: #f59e0b; letter-spacing: 2px; font-size: 1rem; line-height: 1; }
+.rev-card p { margin: 0; flex: 1; color: var(--ink-2); font-size: .92rem; line-height: 1.6; }
+.rev-card footer { display: flex; align-items: baseline; gap: 8px; }
+.rev-card footer b { font-size: .9rem; }
+.rev-card footer span { color: var(--muted); font-size: .8rem; }
+.rev-cta { margin-top: 20px; }
+
+/* Botones y enlaces de la sección de contacto sobre el color de marca */
+.cc-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn.ghost.light { background: transparent; border-color: rgba(255,255,255,.55); color: #fff; }
+.btn.ghost.light:hover { background: rgba(255,255,255,.14); border-color: #fff; color: #fff; }
+.cc-facts a { color: #fff; text-decoration: underline; text-underline-offset: 2px; }
+.cc-facts a:hover { opacity: .85; }
+
+/* ==========================================================================
+   Opciones del producto en la ficha (color, tamaño, litros, peso)
+   ========================================================================== */
+.opt-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 4px 0 16px; }
+.opt-field { display: grid; gap: 6px; font-size: .86rem; font-weight: 650; color: var(--ink); }
+.opt-field span { color: var(--ink-2); }
+.opt-field select {
+  width: 100%; font: inherit; font-weight: 600;
+  padding: 11px 12px; border: 1px solid var(--line-2); border-radius: 12px;
+  background: #fff; color: var(--ink); cursor: pointer;
+}
+.opt-field select:focus { outline: 0; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+.ci-opts { display: block; color: var(--muted); font-size: .78rem; line-height: 1.35; margin-top: 2px; }

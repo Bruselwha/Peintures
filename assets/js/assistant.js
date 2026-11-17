@@ -114,12 +114,21 @@
   var INTENTS = {
     greeting: ['hola', 'buenas', 'buenos dias', 'buenas tardes', 'buenas noches', 'hey', 'saludos', 'que tal'],
     thanks: ['gracias', 'muchas gracias'],
+    farewell: ['adios', 'hasta luego', 'chao', 'nos vemos', 'buenas noches'],
     human: ['hablar con alguien', 'persona', 'humano', 'agente', 'contactar', 'hablar con el negocio', 'telefono', 'whatsapp'],
-    delivery: ['envio', 'entrega', 'delivery', 'domicilio', 'reparto', 'traer', 'mandar'],
+    contact: ['contacto', 'contactar', 'telefono', 'whatsapp', 'correo', 'email', 'mail', 'escribir', 'llamar'],
+    location: ['donde estais', 'donde estan', 'donde se encuentran', 'direccion', 'ubicacion', 'como llegar', 'donde queda', 'tienda fisica'],
+    delivery: ['envio', 'entrega', 'delivery', 'domicilio', 'reparto', 'traer', 'mandar', 'enviar'],
     payment: ['pago', 'pagar', 'efectivo', 'tarjeta', 'transferencia', 'como pago'],
+    invoice: ['factura', 'ticket', 'recibo'],
+    returns: ['devolucion', 'devolver', 'cambio', 'garantia', 'reembolso'],
     hours: ['horario', 'abierto', 'cerrado', 'abre', 'cierra', 'atienden', 'a que hora'],
-    categories: ['categoria', 'que vendes', 'que tienes', 'que ofreces', 'servicios', 'catalogo'],
+    categories: ['categoria', 'que vendes', 'que tienes', 'que ofreces', 'servicios', 'catalogo', 'productos'],
     order: ['pedir', 'pedido', 'comprar', 'reservar', 'cita', 'apartar', 'encargar', 'quiero un', 'quiero una'],
+    options: ['color', 'colores', 'tamano', 'tamanos', 'talla', 'tallas', 'litro', 'litros', 'peso', 'pesos', 'medida', 'medidas', 'opciones', 'variedades', 'presentacion', 'acabado', 'acabados'],
+    stock: ['stock', 'disponible', 'disponibilidad', 'hay existencias', 'tienen existencias', 'queda'],
+    discount: ['descuento', 'oferta', 'ofertas', 'rebaja', 'promocion', 'promociones', 'barato'],
+    about: ['quienes sois', 'quienes son', 'sobre vosotros', 'que empresa', 'a que os dedicais', 'de que sois'],
     price: ['precio', 'cuanto', 'cuesta', 'vale', 'coste', 'costo']
   };
 
@@ -131,15 +140,56 @@
     return null;
   }
 
+  // El catálogo puede estar en francés y el cliente preguntar en español (o al
+  // contrario). Este pequeño diccionario empareja las palabras habituales.
+  var SYN = {
+    pintura: 'peinture', pinturas: 'peintures', pintar: 'peinture',
+    blanca: 'blanche', blanco: 'blanc', blancas: 'blanches', blancos: 'blancs',
+    negra: 'noire', negro: 'noir', negras: 'noires',
+    roja: 'rouge', rojo: 'rouge', azul: 'bleu', verde: 'vert',
+    amarilla: 'jaune', amarillo: 'jaune', gris: 'gris', beige: 'beige',
+    marron: 'marron', marrones: 'marron', crema: 'creme',
+    color: 'couleur', colores: 'couleurs', tono: 'teinte', tonos: 'teintes',
+    litro: 'litre', litros: 'litres', peso: 'poids', pesa: 'poids',
+    tamano: 'taille', tamanos: 'tailles', medida: 'mesure', medidas: 'mesures',
+    pared: 'mur', paredes: 'murs', techo: 'plafond', suelo: 'sol', suelos: 'sols',
+    madera: 'bois', metal: 'metal', exterior: 'exterieur', interior: 'interieur',
+    mate: 'mat', brillante: 'brillant', satinada: 'satin',
+    agua: 'eau', disolvente: 'solvant', barniz: 'vernis', esmalte: 'email',
+    rodillo: 'rouleau', brocha: 'pinceau', pincel: 'pinceau', cinta: 'ruban'
+  };
+
+  function words(s) {
+    return norm(s).split(/[^a-z0-9]+/).filter(function (w) { return w.length > 2; })
+      .map(function (w) { return SYN[w] || w; });
+  }
+
   function findProducts(msg) {
     var d = data();
-    var n = norm(msg);
-    var words = n.split(/[^a-z0-9]+/).filter(function (w) { return w.length > 2; });
+    var qWords = words(msg);
+    if (!qWords.length) return [];
+    var qNorm = norm(msg);
     return d.products.filter(function (p) {
-      var pn = norm(p.name);
-      if (pn && n.indexOf(pn) >= 0) return true;
-      return words.some(function (w) { return pn.indexOf(w) >= 0; });
+      var name = CW.tx(p, 'name') || p.name || '';
+      var pn = norm(name);
+      if (pn && (qNorm.indexOf(pn) >= 0 || pn.indexOf(qNorm) >= 0)) return true;
+      var hay = norm([name, p.name, CW.tx(p, 'short_desc'), CW.tx(p, 'description'),
+        (catOfName(d, p.category_id))].filter(Boolean).join(' '));
+      var pWords = words(hay);
+      return qWords.some(function (w) {
+        if (hay.indexOf(w) >= 0) return true;
+        // Coincidencia por raíz (pintura ≈ peinture, blanca ≈ blanche…)
+        return pWords.some(function (pw) {
+          return pw === w || (w.length >= 4 && pw.indexOf(w.slice(0, 4)) === 0) ||
+                 (pw.length >= 4 && w.indexOf(pw.slice(0, 4)) === 0);
+        });
+      });
     }).slice(0, 5);
+  }
+
+  function catOfName(d, id) {
+    var c = (d.cats || []).find(function (x) { return x.id === id; });
+    return c ? (CW.tx(c, 'name') || c.name) : '';
   }
 
   function productLine(p, biz) {
@@ -181,22 +231,41 @@
 
     var intent = matchIntent(msg);
     var hits = findProducts(msg);
-    if (hits.length) return showProducts(hits);
+
+    // Preguntas sobre un artículo concreto: contestar la opción pedida.
+    if (hits.length) {
+      if (intent === 'options') return answerOptions(d, hits);
+      if (intent === 'stock') return answerStock(d, hits);
+      if (intent === 'price') {
+        say(t('as.priceAsk'), { quick: [t('as.q.order'), t('as.q.options')] });
+        return showProducts(hits);
+      }
+      return showProducts(hits);
+    }
 
     if (intent === 'greeting') return greet(true);
-    if (intent === 'thanks') { say(t('as.thanks')); return; }
+    if (intent === 'thanks') { say(t('as.thanks'), { quick: [t('as.q.order'), t('as.q.contact')] }); return; }
+    if (intent === 'farewell') { say(t('as.farewell')); return; }
+    if (intent === 'contact' || intent === 'human') return answerContact(d);
+    if (intent === 'location') return answerLocation(d);
     if (intent === 'delivery') return answerDelivery(d);
     if (intent === 'payment') return answerPayment(d);
+    if (intent === 'invoice') { say(t('as.invoice'), { quick: [t('as.q.order'), t('as.q.contact')] }); return; }
+    if (intent === 'returns') { say(t('as.returns'), { quick: [t('as.q.contact'), t('as.q.order')] }); return; }
     if (intent === 'hours') return answerHours(d);
     if (intent === 'categories') return answerCategories(d);
-    if (intent === 'order' || intent === 'human') return startLead();
+    if (intent === 'options') return answerOptions(d, null);
+    if (intent === 'stock') return answerStock(d, null);
+    if (intent === 'discount') return answerDiscounts(d);
+    if (intent === 'about') return answerAbout(d);
+    if (intent === 'order') return startLead();
     if (intent === 'price') {
-      say(t('as.priceAsk'), { quick: [t('as.q.cats'), t('as.q.human')] });
+      say(t('as.priceAsk'), { quick: [t('as.q.cats'), t('as.q.contact')] });
       return;
     }
-    // Sin intención clara
+    // Sin intención clara: menú de ayuda, nunca silencio.
     say(t('as.fallback'),
-      { quick: [t('as.q.cats'), t('as.q.search'), t('as.q.hours'), t('as.q.order')] });
+      { quick: [t('as.q.cats'), t('as.q.options'), t('as.q.stock'), t('as.q.hours'), t('as.q.contact'), t('as.q.order')] });
   }
 
   // --------------------------------------------------------- Respuestas
@@ -205,7 +274,7 @@
     if (A.els.name) A.els.name.textContent = t('as.title') + (name ? ' · ' + name : '');
     if (A.els.avatar && d.biz) A.els.avatar.textContent = (d.biz.name || 'M').trim().charAt(0).toUpperCase();
     say(t('as.greet', { name: name }),
-      { quick: [t('as.q.order'), t('as.q.cats'), t('as.q.hours'), t('as.q.search')] });
+      { quick: [t('as.q.order'), t('as.q.cats'), t('as.q.options'), t('as.q.hours'), t('as.q.contact'), t('as.q.search')] });
   }
 
   function showProducts(list) {
@@ -228,6 +297,92 @@
     if (byKind.service.length) html += '<span class="prod">' + t('as.catsServices') + ': ' + byKind.service.join(', ') + '</span>';
     html += '<span class="prod">' + t('as.catsAsk') + '</span>';
     say(html, { quick: [t('as.q.search'), t('as.q.order')] });
+  }
+
+  function contactOf(d) {
+    return d.contact || { tel: '+212670964030', telText: '+212 670 964 030', wa: '212670964030', mail: 'contact@arijcolor.com', address: 'Casablanca, Marruecos' };
+  }
+
+  function answerContact(d) {
+    var c = contactOf(d);
+    var wa = 'https://wa.me/' + c.wa + '?text=' + encodeURIComponent(t('as.contactWaMsg'));
+    say(t('as.contactTitle') +
+      '<span class="prod">📞 ' + t('as.phoneL') + ': <b>' + esc(c.telText) + '</b>' +
+      '<br>✉️ ' + t('as.mailL') + ': <b>' + esc(c.mail) + '</b>' +
+      '<br>📍 ' + t('as.addressL') + ': <b>' + esc(c.address) + '</b>' +
+      '<br><a href="' + wa + '" target="_blank" rel="noopener">💬 ' + t('as.waBtn') + '</a></span>',
+      { quick: [t('as.q.location'), t('as.q.hours'), t('as.q.order')] });
+  }
+
+  function answerLocation(d) {
+    var c = contactOf(d);
+    say(t('as.location', { address: esc(c.address) }),
+      { quick: [t('as.q.hours'), t('as.q.contact'), t('as.q.order')] });
+  }
+
+  function optionsOf(p) {
+    var out = [];
+    [['colors', 'opt.color'], ['sizes', 'opt.size'], ['liters', 'opt.liters'], ['weights', 'opt.weight']]
+      .forEach(function (g) {
+        var arr = (p.options || {})[g[0]];
+        if (Array.isArray(arr) && arr.length) out.push(t(g[1]) + ': ' + arr.join(', '));
+      });
+    return out;
+  }
+
+  function answerOptions(d, hits) {
+    var html = '';
+    var list = hits && hits.length ? hits : d.products;
+    if (hits && hits.length) {
+      var blocks = [];
+      hits.forEach(function (p) {
+        var o = optionsOf(p);
+        if (o.length) blocks.push('<b>' + esc(CW.tx(p, 'name')) + '</b><br>' + o.join('<br>'));
+      });
+      if (!blocks.length) { say(t('as.optionsNone'), { quick: [t('as.q.cats'), t('as.q.contact')] }); return; }
+      html = t('as.optionsFor') + '<span class="prod">' + blocks.join('<br><br>') + '</span>';
+      say(html, { quick: [t('as.q.order'), t('as.q.contact')] });
+      return;
+    }
+    // Sin artículo concreto: resumen de todas las opciones publicadas.
+    var agg = { colors: [], sizes: [], liters: [], weights: [] };
+    list.forEach(function (p) {
+      Object.keys(agg).forEach(function (k) {
+        var arr = (p.options || {})[k];
+        if (Array.isArray(arr)) arr.forEach(function (v) { if (v && agg[k].indexOf(v) === -1) agg[k].push(v); });
+      });
+    });
+    var rows = [];
+    [['colors', 'opt.colors'], ['sizes', 'opt.sizes'], ['liters', 'opt.liters'], ['weights', 'opt.weights']]
+      .forEach(function (g) { if (agg[g[0]].length) rows.push(t(g[1]) + ': ' + esc(agg[g[0]].join(', '))); });
+    if (!rows.length) { say(t('as.optionsNone'), { quick: [t('as.q.cats'), t('as.q.contact')] }); return; }
+    say(t('as.optionsIntro') + '<span class="prod">' + rows.join('<br>') + '</span><span class="prod">' + t('as.optionsAsk') + '</span>',
+      { quick: [t('as.q.cats'), t('as.q.order')] });
+  }
+
+  function answerStock(d, hits) {
+    if (hits && hits.length) {
+      say(hits.map(function (p) {
+        return t('as.stockYes', { name: esc(CW.tx(p, 'name')) });
+      }).join('<br>'), { quick: [t('as.q.order'), t('as.q.options')] });
+      return;
+    }
+    say(t('as.stockAsk'), { quick: [t('as.q.cats'), t('as.q.search')] });
+  }
+
+  function answerDiscounts(d) {
+    var promo = d.products.filter(function (p) {
+      return Number(p.promo_price) > 0 && Number(p.promo_price) < Number(p.price);
+    }).slice(0, 6);
+    if (!promo.length) { say(t('as.noDiscounts'), { quick: [t('as.q.cats'), t('as.q.order')] }); return; }
+    say(t('as.discounts') + promo.map(function (p) { return productLine(p, d.biz); }).join(''),
+      { quick: [t('as.q.order'), t('as.q.cats')] });
+  }
+
+  function answerAbout(d) {
+    var b = d.biz;
+    say(t('as.about', { name: '<b>' + esc(b.name) + '</b>', desc: esc(CW.tx(b, 'description') || '') }),
+      { quick: [t('as.q.cats'), t('as.q.order'), t('as.q.contact')] });
   }
 
   function answerDelivery(d) {
@@ -420,9 +575,13 @@
     window.addEventListener('cw:lang', function () {
       if (!A.els) return;
       A.els.input.placeholder = t('as.placeholder');
-      A.els.msgs.innerHTML = ''; A.els.quick.innerHTML = '';
-      A.greeted = true;
-      reset();
+      // Si hay un pedido a medio rellenar, no se borra: se continúa donde iba.
+      if (A.state === 'lead') return;
+      try {
+        A.els.msgs.innerHTML = ''; A.els.quick.innerHTML = '';
+        A.greeted = true;
+        reset();
+      } catch (e) { console.warn('[CW] asistente:', e); }
     });
     // Refresca el nombre cuando el catálogo termine de cargar.
     var tries = 0;

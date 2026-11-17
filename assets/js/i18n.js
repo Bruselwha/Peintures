@@ -347,7 +347,7 @@
       'as.hours': 'Atendemos <b>{days}</b> de <b>{open}</b> a <b>{close}</b>.',
       'as.daysNone': 'sin días definidos',
       'as.priceAsk': 'Dime el nombre del artículo y te digo el precio. También puedes ver todo en el catálogo.',
-      'as.fallback': 'Puedo ayudarte con precios, categorías, entrega, pagos y horarios. ¿Sobre qué quieres saber?',
+      'as.fallback': 'Puedo ayudarte con precios, colores y medidas, disponibilidad, categorías, entrega, pagos, horarios y contacto. ¿Sobre qué quieres saber?',
       'as.thanks': '¡Con gusto! Si necesitas algo más, aquí estoy.',
       'as.leadStart': 'Perfecto, te ayudo con tu pedido.<br><br>¿Cómo te llamas?',
       'as.leadName': 'Gracias, <b>{name}</b>. ¿Cuál es tu número de teléfono?',
@@ -380,6 +380,52 @@
       'as.whenLabel': 'Cuándo',
       'as.nameLabel': 'Nombre',
       'as.phoneLabel': 'Teléfono',
+
+      'nav.reviews': 'Reseñas',
+      'nav.contact': 'Contacto',
+      'cc.phone': 'Teléfono',
+      'cc.mail': 'Correo',
+      'cc.address': 'Dirección',
+      'rev.kicker': 'Opiniones',
+      'rev.title': 'Lo que dicen nuestros clientes',
+      'rev.sub': 'Reseñas de personas que ya han comprado en Peintures Arij Color.',
+      'rev.cta': 'Dejar mi reseña',
+      'rev.waMsg': 'Hola, quiero dejar mi reseña sobre mi compra.',
+      'rev.1.text': 'Pedí pintura para el salón y me asesoraron con el color. Llegó rápido y el acabado quedó perfecto.',
+      'rev.2.text': 'Buen precio y trato muy cercano. El pedido por WhatsApp es muy cómodo.',
+      'rev.3.text': 'Compré pintura y material por primera vez y repetiré. Me ayudaron a calcular los litros que necesitaba.',
+      'opt.title': 'Opciones del producto',
+      'opt.hint': 'Escribe las opciones separadas por comas. Se muestran en la ficha para que el cliente elija.',
+      'opt.color': 'Color',
+      'opt.size': 'Tamaño',
+      'opt.liters': 'Litros',
+      'opt.weight': 'Peso',
+      'opt.colors': 'Colores',
+      'opt.sizes': 'Tamaños',
+      'opt.weights': 'Pesos',
+
+      'as.contactWaMsg': 'Hola, quiero hacer una consulta.',
+      'as.contactTitle': 'Puedes contactarnos así:',
+      'as.phoneL': 'Teléfono',
+      'as.mailL': 'Correo',
+      'as.addressL': 'Dirección',
+      'as.waBtn': 'Escribir por WhatsApp',
+      'as.location': 'Estamos en <b>{address}</b>. También atendemos por WhatsApp.',
+      'as.optionsIntro': 'Estas son las opciones disponibles en el catálogo:',
+      'as.optionsFor': 'Estas son las opciones:',
+      'as.optionsNone': 'Ahora mismo no hay colores, tamaños, litros ni pesos publicados. Dime qué buscas y te ayudo.',
+      'as.optionsAsk': 'Dime el nombre de un artículo y te digo sus colores, tamaños, litros o pesos.',
+      'as.stockYes': 'Sí, <b>{name}</b> está disponible en el catálogo.',
+      'as.stockAsk': 'Dime qué artículo te interesa y te confirmo la disponibilidad.',
+      'as.discounts': 'Estos artículos están de oferta:',
+      'as.noDiscounts': 'Ahora mismo no hay ofertas publicadas, pero puedo darte precios y disponibilidad.',
+      'as.invoice': 'Sí, podemos emitir factura. Pídela al confirmar el pedido o escríbenos por WhatsApp.',
+      'as.returns': 'Para cambios o devoluciones, escríbenos por WhatsApp con tu número de pedido y lo vemos contigo.',
+      'as.about': 'Somos {name}. {desc}',
+      'as.farewell': '¡Gracias por escribirnos! Aquí estaré si necesitas algo más.',
+      'as.q.options': 'Colores y medidas',
+      'as.q.contact': 'Contacto',
+      'as.q.stock': 'Disponibilidad',
       'cc.kicker': 'Contacto',
       'cc.title': '¿Hablamos?',
       'cc.sub': 'Escríbenos por WhatsApp y te respondemos lo antes posible.',
@@ -740,6 +786,52 @@
       'as.whenLabel': 'Quand',
       'as.nameLabel': 'Nom',
       'as.phoneLabel': 'Téléphone',
+
+      'nav.reviews': 'Avis',
+      'nav.contact': 'Contact',
+      'cc.phone': 'Téléphone',
+      'cc.mail': 'E-mail',
+      'cc.address': 'Adresse',
+      'rev.kicker': 'Avis clients',
+      'rev.title': 'Ce que disent nos clients',
+      'rev.sub': 'Avis de personnes ayant déjà acheté chez Peintures Arij Color.',
+      'rev.cta': 'Laisser mon avis',
+      'rev.waMsg': 'Bonjour, je souhaite laisser un avis sur mon achat.',
+      'rev.1.text': 'J’ai commandé de la peinture pour le salon et j’ai été bien conseillée sur la couleur. Livraison rapide et finition parfaite.',
+      'rev.2.text': 'Bon prix et accueil très sympa. Commander par WhatsApp est vraiment pratique.',
+      'rev.3.text': 'Premier achat de peinture et de matériel, je reviendrai. Ils m’ont aidée à calculer les litres nécessaires.',
+      'opt.title': 'Options du produit',
+      'opt.hint': 'Séparez les options par des virgules. Elles s’affichent dans la fiche pour que le client choisisse.',
+      'opt.color': 'Couleur',
+      'opt.size': 'Taille',
+      'opt.liters': 'Litres',
+      'opt.weight': 'Poids',
+      'opt.colors': 'Couleurs',
+      'opt.sizes': 'Tailles',
+      'opt.weights': 'Poids',
+
+      'as.contactWaMsg': 'Bonjour, je voudrais poser une question.',
+      'as.contactTitle': 'Voici comment nous contacter :',
+      'as.phoneL': 'Téléphone',
+      'as.mailL': 'E-mail',
+      'as.addressL': 'Adresse',
+      'as.waBtn': 'Écrire sur WhatsApp',
+      'as.location': 'Nous sommes à <b>{address}</b>. Nous répondons aussi sur WhatsApp.',
+      'as.optionsIntro': 'Voici les options disponibles au catalogue :',
+      'as.optionsFor': 'Voici les options :',
+      'as.optionsNone': 'Aucune couleur, taille, contenance ou poids n’est publié pour le moment. Dites-moi ce que vous cherchez.',
+      'as.optionsAsk': 'Donnez-moi le nom d’un article et je vous indique ses couleurs, tailles, litres ou poids.',
+      'as.stockYes': 'Oui, <b>{name}</b> est disponible au catalogue.',
+      'as.stockAsk': 'Dites-moi quel article vous intéresse et je vérifie la disponibilité.',
+      'as.discounts': 'Ces articles sont en promotion :',
+      'as.noDiscounts': 'Aucune promotion publiée pour le moment, mais je peux vous donner les prix et la disponibilité.',
+      'as.invoice': 'Oui, nous pouvons établir une facture. Demandez-la en confirmant la commande ou écrivez-nous sur WhatsApp.',
+      'as.returns': 'Pour un échange ou un retour, écrivez-nous sur WhatsApp avec votre numéro de commande.',
+      'as.about': 'Nous sommes {name}. {desc}',
+      'as.farewell': 'Merci de nous avoir écrit ! Je reste disponible si vous avez besoin d’autre chose.',
+      'as.q.options': 'Couleurs et mesures',
+      'as.q.contact': 'Contact',
+      'as.q.stock': 'Disponibilité',
       'cc.kicker': 'Contact',
       'cc.title': 'On discute ?',
       'cc.sub': 'Écrivez-nous sur WhatsApp, nous répondons au plus vite.',
@@ -1075,6 +1167,52 @@
       'as.whenLabel': 'الموعد',
       'as.nameLabel': 'الاسم',
       'as.phoneLabel': 'الهاتف',
+
+      'nav.reviews': 'التقييمات',
+      'nav.contact': 'اتصل بنا',
+      'cc.phone': 'الهاتف',
+      'cc.mail': 'البريد الإلكتروني',
+      'cc.address': 'العنوان',
+      'rev.kicker': 'آراء العملاء',
+      'rev.title': 'ماذا يقول عملاؤنا',
+      'rev.sub': 'تقييمات أشخاص اشتروا من Peintures Arij Color.',
+      'rev.cta': 'أضف تقييمي',
+      'rev.waMsg': 'مرحبًا، أريد إضافة تقييم عن عملية الشراء.',
+      'rev.1.text': 'طلبت دهانًا للصالون ونصحوني باللون المناسب. وصل بسرعة والنتيجة ممتازة.',
+      'rev.2.text': 'سعر جيد وتعامل راقٍ. الطلب عبر واتساب مريح جدًا.',
+      'rev.3.text': 'أول مرة أشتري الدهان والأدوات وسأكرر التجربة. ساعدوني في حساب عدد اللترات.',
+      'opt.title': 'خيارات المنتج',
+      'opt.hint': 'اكتب الخيارات مفصولة بفواصل. تظهر في بطاقة المنتج ليختار العميل.',
+      'opt.color': 'اللون',
+      'opt.size': 'المقاس',
+      'opt.liters': 'اللترات',
+      'opt.weight': 'الوزن',
+      'opt.colors': 'الألوان',
+      'opt.sizes': 'المقاسات',
+      'opt.weights': 'الأوزان',
+
+      'as.contactWaMsg': 'مرحبًا، لدي استفسار.',
+      'as.contactTitle': 'يمكنك التواصل معنا هكذا:',
+      'as.phoneL': 'الهاتف',
+      'as.mailL': 'البريد الإلكتروني',
+      'as.addressL': 'العنوان',
+      'as.waBtn': 'اكتب على واتساب',
+      'as.location': 'نحن في <b>{address}</b>. ونجيب أيضًا على واتساب.',
+      'as.optionsIntro': 'هذه هي الخيارات المتوفرة في الكتالوج:',
+      'as.optionsFor': 'هذه هي الخيارات:',
+      'as.optionsNone': 'لا توجد حاليًا ألوان أو مقاسات أو لترات أو أوزان منشورة. أخبرني بما تبحث عنه.',
+      'as.optionsAsk': 'اكتب اسم المنتج وسأخبرك بالألوان والمقاسات واللترات والأوزان.',
+      'as.stockYes': 'نعم، <b>{name}</b> متوفر في الكتالوج.',
+      'as.stockAsk': 'أخبرني بالمنتج الذي يهمك وسأتحقق من توفره.',
+      'as.discounts': 'هذه المنتجات عليها عروض:',
+      'as.noDiscounts': 'لا توجد عروض منشورة حاليًا، لكن يمكنني إخبارك بالأسعار والتوفر.',
+      'as.invoice': 'نعم، يمكننا إصدار فاتورة. اطلبها عند تأكيد الطلب أو راسلنا على واتساب.',
+      'as.returns': 'للاستبدال أو الإرجاع، راسلنا على واتساب مع رقم طلبك.',
+      'as.about': 'نحن {name}. {desc}',
+      'as.farewell': 'شكرًا لتواصلك! أنا هنا إن احتجت أي شيء آخر.',
+      'as.q.options': 'الألوان والمقاسات',
+      'as.q.contact': 'اتصل بنا',
+      'as.q.stock': 'التوفر',
       'cc.kicker': 'اتصل بنا',
       'cc.title': 'هل نتحدث؟',
       'cc.sub': 'راسلنا على واتساب وسنجيبك في أقرب وقت.',
@@ -1166,6 +1304,8 @@
 
     // Selector de idioma desplegable con banderas
     langSwitcher: function (el) {
+      if (el._langReady) return;
+      el._langReady = true;
       var self = this;
       function render() {
         el.innerHTML =
@@ -1196,11 +1336,22 @@
         el.querySelectorAll('[data-lang]').forEach(function (b) {
           b.addEventListener('click', function () { self.setLang(b.getAttribute('data-lang')); close(); });
         });
-        // Cierra al pulsar fuera o con Escape (se enlaza una sola vez)
+        // Cierra al pulsar fuera o con Escape. Se consulta el DOM actual (no
+        // una referencia antigua) porque el desplegable se vuelve a pintar al
+        // cambiar de idioma; si no, el menú se quedaba abierto y bloqueaba.
         if (!el._langBound) {
           el._langBound = true;
-          document.addEventListener('click', function () { if (!menu.hidden) close(); });
-          document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !menu.hidden) close(); });
+          function closeAll() {
+            document.querySelectorAll('.lang-dd.open').forEach(function (d) {
+              d.classList.remove('open');
+              var b = d.querySelector('.lang-dd-btn');
+              var mm = d.querySelector('.lang-dd-menu');
+              if (b) b.setAttribute('aria-expanded', 'false');
+              if (mm) mm.hidden = true;
+            });
+          }
+          document.addEventListener('click', closeAll);
+          document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAll(); });
         }
       }
       render();

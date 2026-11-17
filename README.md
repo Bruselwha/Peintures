@@ -34,6 +34,8 @@ assets/js/              config, i18n, panel-i18n, store, common, auth,
 assets/demo/            Imágenes del catálogo de ejemplo
 supabase/schema.sql     Esquema COMPLETO para un proyecto nuevo
 supabase/*.sql          Migraciones incrementales (proyectos ya existentes)
+                        · actualizacion-opciones-producto.sql (color, tamaño,
+                          litros y peso de cada producto)
 ```
 
 ### Páginas y URLs

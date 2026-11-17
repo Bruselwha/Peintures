@@ -954,3 +954,9 @@ input.invalid, textarea.invalid, select.invalid { border-color: var(--bad) !impo
 .pwa-help-modal { width: min(430px, 100%); }
 .pwa-steps { margin: 12px 0 0; padding-inline-start: 20px; display: grid; gap: 10px; }
 .pwa-steps li { font-size: .93rem; line-height: 1.5; color: var(--ink-2); }
+
+/* App instalada (standalone): sin desenfoques en la cabecera. En iOS/Android
+   el backdrop-filter puede dejar la página sin repintar al cambiar de idioma. */
+@media (display-mode: standalone) {
+  .cat-header, .site-header, .app-topbar { backdrop-filter: none; -webkit-backdrop-filter: none; background: #fff; }
+}

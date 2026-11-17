@@ -16,6 +16,24 @@
 
   function param(k) { return new URLSearchParams(location.search).get(k); }
 
+  // Datos de contacto del negocio (los que se muestran en la sección de
+  // contacto y en la ayuda del asistente).
+  var CONTACT = {
+    tel: '+212670964030',
+    telText: '+212 670 964 030',
+    wa: '212670964030',
+    mail: 'contact@arijcolor.com',
+    address: 'Casablanca, Marruecos'
+  };
+
+  // Reseñas de ejemplo: edita aquí los nombres, ciudades y estrellas. Los
+  // textos están en i18n.js (rev.1.text, rev.2.text, rev.3.text).
+  var REVIEWS = [
+    { name: 'Salma B.', city: 'Casablanca', stars: 5, key: 1 },
+    { name: 'Youssef K.', city: 'Rabat', stars: 5, key: 2 },
+    { name: 'Nadia E.', city: 'Casablanca', stars: 5, key: 3 }
+  ];
+
   // ---- Datos ----------------------------------------------------------
   // El catálogo de ejemplo (`?b=demo`) se puede editar desde el panel:
   // Administración → Demo. Si no hay nada guardado, usa los valores base.
@@ -128,7 +146,8 @@
     if (menu) menu.innerHTML = renderFilters();
 
     root.innerHTML = hero + info +
-      '<section class="wrap cat-grid" data-grid></section>' +
+      '<section class="wrap cat-grid" id="categorias" data-grid></section>' +
+      reviewsHTML() +
       contactHTML() +
       '<footer class="cat-footer"><div class="wrap"><div>' + esc(CW.tx(b, 'name')) + ' · Arij Color</div>' +
         '<nav class="cat-policies">' +
@@ -143,27 +162,50 @@
     updateCartUI();
   }
 
+  // Reseñas de clientes (antes de contacto).
+  function reviewsHTML() {
+    var wa = 'https://wa.me/' + CONTACT.wa + '?text=' + encodeURIComponent(t('rev.waMsg'));
+    return '<section class="cat-reviews" id="resenas"><div class="wrap">' +
+      '<div class="rev-head">' +
+        '<span class="cc-kicker">' + t('rev.kicker') + '</span>' +
+        '<h2>' + t('rev.title') + '</h2>' +
+        '<p>' + t('rev.sub') + '</p>' +
+      '</div>' +
+      '<div class="rev-grid">' + REVIEWS.map(function (r) {
+        return '<article class="rev-card">' +
+          '<div class="rev-stars" aria-label="' + r.stars + '/5">' + new Array(r.stars + 1).join('★') + '</div>' +
+          '<p>' + esc(t('rev.' + r.key + '.text')) + '</p>' +
+          '<footer><b>' + esc(r.name) + '</b><span>' + esc(r.city) + '</span></footer>' +
+        '</article>';
+      }).join('') + '</div>' +
+      '<a class="btn ghost rev-cta" href="' + wa + '" target="_blank" rel="noopener">💬 ' + t('rev.cta') + '</a>' +
+    '</div></section>';
+  }
+
   // Sección de contacto justo encima del pie, con el color de los botones.
   function contactHTML() {
     var b = S.biz;
-    var digits = String(b.whatsapp || '').replace(/[^\d]/g, '');
-    if (digits.length < 8) digits = String((CW.config && CW.config.supportWhatsapp) || '').replace(/[^\d]/g, '');
-    var wa = digits ? 'https://wa.me/' + digits + '?text=' + encodeURIComponent(t('cc.waMsg')) : '';
+    var wa = 'https://wa.me/' + CONTACT.wa + '?text=' + encodeURIComponent(t('cc.waMsg'));
     var names = String(t('as.days')).split(',');
     var work = (b.work_days || [1, 2, 3, 4, 5, 6]).slice().sort();
     var days = work.map(function (i) { return names[i] || ''; }).filter(Boolean).join(', ');
     var hours = days ? days + ' · ' + (b.open_time || '') + ' – ' + (b.close_time || '') : '';
-    var where = [b.address, b.city, b.region].filter(Boolean).join(', ');
 
     return '<section class="cat-contact" id="contacto"><div class="wrap cc-inner">' +
       '<div class="cc-copy">' +
         '<span class="cc-kicker">' + t('cc.kicker') + '</span>' +
         '<h2>' + t('cc.title') + '</h2>' +
         '<p>' + t('cc.sub') + '</p>' +
-        (wa ? '<a class="btn wa lg" href="' + wa + '" target="_blank" rel="noopener">💬 ' + t('cc.wa') + '</a>' : '') +
+        '<div class="cc-actions">' +
+          '<a class="btn wa lg" href="' + wa + '" target="_blank" rel="noopener">💬 ' + t('cc.wa') + '</a>' +
+          '<a class="btn ghost light lg" href="mailto:' + CONTACT.mail + '">✉️ ' + t('cc.mail') + '</a>' +
+        '</div>' +
       '</div>' +
       '<ul class="cc-facts">' +
-        (where ? '<li><i>📍</i><div><b>' + t('cc.where') + '</b><span>' + esc(where) + '</span></div></li>' : '') +
+        '<li><i>📞</i><div><b>' + t('cc.phone') + '</b><a href="tel:' + CONTACT.tel + '">' + CONTACT.telText + '</a></div></li>' +
+        '<li><i>💬</i><div><b>WhatsApp</b><a href="' + wa + '" target="_blank" rel="noopener">' + CONTACT.telText + '</a></div></li>' +
+        '<li><i>✉️</i><div><b>' + t('cc.mail') + '</b><a href="mailto:' + CONTACT.mail + '">' + CONTACT.mail + '</a></div></li>' +
+        '<li><i>📍</i><div><b>' + t('cc.address') + '</b><span>' + CONTACT.address + '</span></div></li>' +
         (hours ? '<li><i>🕒</i><div><b>' + t('cc.hours') + '</b><span>' + esc(hours) + '</span></div></li>' : '') +
       '</ul>' +
       '</div></section>';
@@ -338,12 +380,36 @@
       '</div></article>';
   }
 
+  // ---- Opciones del producto (color, tamaño, litros, peso) -----------
+  var OPT_GROUPS = [
+    { k: 'colors', label: 'opt.color' },
+    { k: 'sizes', label: 'opt.size' },
+    { k: 'liters', label: 'opt.liters' },
+    { k: 'weights', label: 'opt.weight' }
+  ];
+
+  function optList(p, k) {
+    var o = (p && p.options) || {};
+    var arr = o[k];
+    if (!Array.isArray(arr)) return [];
+    return arr.map(function (v) { return String(v).trim(); }).filter(Boolean);
+  }
+  function optGroups(p) {
+    return OPT_GROUPS.map(function (g) {
+      return { k: g.k, label: t(g.label), values: optList(p, g.k) };
+    }).filter(function (g) { return g.values.length; });
+  }
+  function optSig(options) {
+    return (options || []).map(function (o) { return (o.k || o.label) + '=' + o.value; }).join('|');
+  }
+
   // ---- Ficha de detalle ----------------------------------------------
   function openDetail(id) {
     var p = S.products.find(function (x) { return x.id === id; }); if (!p) return;
     if (S.biz.id !== 'demo') CW.store.incrementViews(p.id);
     var c = catOf(p.category_id);
     var imgs = (p.images && p.images.length) ? p.images : [null];
+    var groups = p.kind === 'service' ? [] : optGroups(p);
     var m = CW.modal({
       className: 'detail-modal',
       title: CW.tx(p, 'name'),
@@ -362,6 +428,12 @@
             (p.modality ? '<li>📍 ' + t('cat.public.modality') + ': <b>' + esc(p.modality) + '</b></li>' : '') +
             (p.kind === 'service' ? '<li>✅ ' + t('cat.public.available') + '</li>' : '') +
           '</ul>' +
+          (groups.length ? '<div class="opt-groups">' + groups.map(function (g) {
+            return '<label class="opt-field"><span>' + esc(g.label) + '</span>' +
+              '<select data-opt="' + g.k + '">' + g.values.map(function (v) {
+                return '<option value="' + esc(v) + '">' + esc(v) + '</option>';
+              }).join('') + '</select></label>';
+          }).join('') + '</div>' : '') +
           (CW.tx(p, 'description') ? '<p class="detail-desc">' + esc(CW.tx(p, 'description')).replace(/\n/g, '<br>') + '</p>' : '') +
           '<div class="detail-actions"><button class="btn primary" data-d-add="' + p.id + '">' + (p.kind === 'service' ? (p.bookable ? t('cat.public.book') : t('cat.public.request')) : t('cat.public.add')) + '</button>' +
           '<button class="btn ghost" data-d-share="' + p.id + '">↗ ' + t('common.share') + '</button></div></div>' +
@@ -376,9 +448,16 @@
     });
     // Mismo formulario de reserva que el botón de la tarjeta: un solo flujo.
     $('[data-d-add]', m.modal).addEventListener('click', function () {
+      if (p.kind === 'service' && p.bookable) {
+        m.close(); return openBooking(p.id);
+      }
+      // Opciones elegidas en la ficha (color, tamaño, litros, peso).
+      var chosen = groups.map(function (g) {
+        var el = $('[data-opt="' + g.k + '"]', m.modal);
+        return el && el.value ? { k: g.k, label: g.label, value: el.value } : null;
+      }).filter(Boolean);
       m.close();
-      if (p.kind === 'service' && p.bookable) return openBooking(p.id);
-      addToCart(p.id);
+      addToCart(p.id, { options: chosen });
       openCart();
     });
     $('[data-d-share]', m.modal).addEventListener('click', function () {
@@ -633,23 +712,30 @@
   function addToCart(id, opts) {
     var p = S.products.find(function (x) { return x.id === id; }); if (!p) return;
     opts = opts || {};
+    var options = opts.options || [];
+    var sig = optSig(options);
     // Una reserva de servicio nunca se suma a otra: es una cita con su hora.
-    var it = opts.appointment ? null : S.cart.find(function (x) { return x.id === id && !x.appointment; });
+    // Cada combinación de opciones es una línea distinta del carrito.
+    var it = opts.appointment ? null : S.cart.find(function (x) {
+      return x.id === id && !x.appointment && (x.optSig || '') === sig;
+    });
     if (it) it.qty++;
     else S.cart.push({
-      id: p.id, name: CW.tx(p, 'name'), price: eff(p), qty: 1, kind: p.kind,
+      key: p.id + (sig ? '#' + sig : ''), id: p.id, name: CW.tx(p, 'name'),
+      price: eff(p), qty: 1, kind: p.kind,
       image: (p.images && p.images[0]) || '', bookable: !!p.bookable,
       category_name: (catOf(p.category_id) || {}).name || '',
       duration: p.duration || '', modality: p.modality || '',
+      options: options, optSig: sig,
       appointment: opts.appointment || null
     });
     if (!opts.appointment) CW.toast(t('common.add') + ': ' + CW.tx(p, 'name'));
     updateCartUI(); drawGrid();
   }
-  function removeFromCart(id) { S.cart = S.cart.filter(function (x) { return x.id !== id; }); updateCartUI(); drawGrid(); }
-  function setQty(id, d) {
-    var it = S.cart.find(function (x) { return x.id === id; }); if (!it) return;
-    it.qty += d; if (it.qty <= 0) removeFromCart(id); else { updateCartUI(); }
+  function removeFromCart(key) { S.cart = S.cart.filter(function (x) { return x.key !== key; }); updateCartUI(); drawGrid(); }
+  function setQty(key, d) {
+    var it = S.cart.find(function (x) { return x.key === key; }); if (!it) return;
+    it.qty += d; if (it.qty <= 0) removeFromCart(key); else { updateCartUI(); }
   }
   function cartCount() { return S.cart.reduce(function (s, x) { return s + x.qty; }, 0); }
   function subtotal() { return S.cart.reduce(function (s, x) { return s + x.price * x.qty; }, 0); }
@@ -693,10 +779,11 @@
         return '<li class="cart-item">' +
           '<div class="ci-thumb">' + (it.image ? '<img src="' + esc(it.image) + '">' : '🖼️') + '</div>' +
           '<div class="ci-info"><b>' + esc(it.name) + '</b>' + (it.kind === 'service' ? '<small>' + t('prod.type.service') + '</small>' : '') +
+          (it.options && it.options.length ? '<small class="ci-opts">' + it.options.map(function (o) { return esc(o.label) + ': ' + esc(o.value); }).join(' · ') + '</small>' : '') +
           (it.appointment ? '<small class="ci-appt">📅 ' + esc(it.appointment.date) + ' · ' + esc(it.appointment.time) + '</small>' : '') +
-          '<div class="qty"><button data-qm="' + it.id + '">−</button><span>' + it.qty + '</span><button data-qp="' + it.id + '">+</button></div></div>' +
+          '<div class="qty"><button data-qm="' + esc(it.key) + '">−</button><span>' + it.qty + '</span><button data-qp="' + esc(it.key) + '">+</button></div></div>' +
           '<div class="ci-right"><b>' + (it.price > 0 ? money(it.price * it.qty, S.biz.currency) : t('cat.public.consult')) + '</b>' +
-          '<button class="icon-btn" data-rm="' + it.id + '">✕</button></div></li>';
+          '<button class="icon-btn" data-rm="' + esc(it.key) + '">✕</button></div></li>';
       }).join('') + '</ul>' +
       '<div class="cart-form">' +
         '<h4>' + t('cat.public.yourdata') + '</h4>' +
@@ -766,6 +853,7 @@
           return {
             name: x.name, qty: x.qty, price: x.price, kind: x.kind,
             duration: x.duration || '', modality: x.modality || '',
+            options: x.options || [],
             appointment: x.appointment || null
           };
         }),
@@ -784,7 +872,7 @@
 
   // ---- API para otros módulos (p. ej. el asistente) -------------------
   CW.catalogData = function () {
-    return { biz: S.biz, products: S.products, cats: S.cats, cart: S.cart };
+    return { biz: S.biz, products: S.products, cats: S.cats, cart: S.cart, contact: CONTACT };
   };
   CW.catalogAdd = function (id) { addToCart(id); };
   CW.catalogOpen = function () { openCart(); };
@@ -814,8 +902,22 @@
       });
     }
 
-    // El asistente sigue disponible en el botón flotante.
-    window.addEventListener('cw:lang', function () { if (S.biz) render(); });
+    // Cambio de idioma: se cierra lo que esté abierto y se vuelve a pintar.
+    // Si algo fallara, se recarga una vez para no dejar la página bloqueada.
+    var reloading = false;
+    window.addEventListener('cw:lang', function () {
+      if (!S.biz || reloading) return;
+      try {
+        if (header) { header.classList.remove('menu-open'); }
+        if (burger) { burger.setAttribute('aria-expanded', 'false'); burger.textContent = '☰'; }
+        document.querySelectorAll('.lang-dd.open').forEach(function (d) { d.classList.remove('open'); });
+        render();
+      } catch (e) {
+        console.error('[CW] Error al cambiar de idioma:', e);
+        reloading = true;
+        location.reload();
+      }
+    });
     load().then(render).catch(function (e) { console.error(e); render(); });
   });
 })(window, document);

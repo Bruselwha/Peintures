@@ -607,10 +607,24 @@
     draw();
   }
 
+  // Opciones del producto guardadas como lista: {colors:[], sizes:[], liters:[], weights:[]}
+  function optCsv(p, k) {
+    var a = ((p && p.options) || {})[k];
+    return Array.isArray(a) ? a.join(', ') : '';
+  }
+  function optParse(v) {
+    var out = [];
+    String(v || '').split(/[,\n;]+/).forEach(function (x) {
+      x = x.trim();
+      if (x && out.indexOf(x) === -1) out.push(x);
+    });
+    return out.slice(0, 20);
+  }
+
   function renderProductForm(view) {
     var onServices = state.route === 'services';
     var editing = state.sub === 'edit' ? state.products.find(function (p) { return p.id === state.param; }) : null;
-    var p = editing || { name: '', slug: '', category_id: '', description: '', short_desc: '', sort_order: 0, price: 0, promo_price: '', images: [], active: true, kind: onServices ? 'service' : 'product', duration: '', modality: '', bookable: onServices, requirements: '' };
+    var p = editing || { name: '', slug: '', category_id: '', description: '', short_desc: '', sort_order: 0, price: 0, promo_price: '', images: [], active: true, kind: onServices ? 'service' : 'product', duration: '', modality: '', bookable: onServices, requirements: '', options: {} };
     var images = (p.images || []).slice();
     view.innerHTML =
       '<div class="view-head"><div><span class="crumb-mini">' + (onServices ? t('sv.list') : t('nav.products')) + ' / ' + (editing ? t('common.edit') : t('common.add')) + '</span>' +
@@ -634,6 +648,15 @@
             field(t('prod.regular') + ' (' + state.biz.currency + ')', '<input type="number" step="0.01" data-f="price" value="' + (p.price || '') + '">') +
             field(t('prod.promo') + ' <span class="muted">(' + t('common.optional') + ')</span>', '<input type="number" step="0.01" data-f="promo_price" value="' + (p.promo_price || '') + '">') +
             '</div>') +
+          (onServices ? '' : card(t('opt.title'), t('opt.hint'),
+            '<div class="two-col-inline">' +
+              field(t('opt.colors') + ' <span class="muted">(' + t('common.optional') + ')</span>', '<input data-f="opt_colors" value="' + esc(optCsv(p, 'colors')) + '" placeholder="Blanco, Beige, Gris">') +
+              field(t('opt.sizes') + ' <span class="muted">(' + t('common.optional') + ')</span>', '<input data-f="opt_sizes" value="' + esc(optCsv(p, 'sizes')) + '" placeholder="30x60, 60x60">') +
+            '</div>' +
+            '<div class="two-col-inline">' +
+              field(t('opt.liters') + ' <span class="muted">(' + t('common.optional') + ')</span>', '<input data-f="opt_liters" value="' + esc(optCsv(p, 'liters')) + '" placeholder="1, 4, 20">') +
+              field(t('opt.weights') + ' <span class="muted">(' + t('common.optional') + ')</span>', '<input data-f="opt_weights" value="' + esc(optCsv(p, 'weights')) + '" placeholder="1 kg, 5 kg">') +
+            '</div>')) +
           '<div data-service-fields' + (p.kind === 'service' ? '' : ' hidden') + '>' +
             card(t('prod.type.service'), '', '<div class="two-col-inline">' +
               field(t('prod.duration'), '<input data-f="duration" value="' + esc(p.duration || '') + '" placeholder="Ej. 1 h 30">') +
@@ -703,7 +726,13 @@
         images: images, active: p.active !== false, kind: kind,
         duration: kind === 'service' ? val('duration') : '', modality: kind === 'service' ? val('modality') : '',
         bookable: kind === 'service' ? !!$('[data-f="bookable"]', view).checked : false,
-        requirements: kind === 'service' ? val('requirements') : ''
+        requirements: kind === 'service' ? val('requirements') : '',
+        options: kind === 'service' ? {} : {
+          colors: optParse(val('opt_colors')),
+          sizes: optParse(val('opt_sizes')),
+          liters: optParse(val('opt_liters')),
+          weights: optParse(val('opt_weights'))
+        }
       };
       obj.i18n = trCollect(view, p);
       if (!obj.name) { CW.toast(t('common.required')); return; }
