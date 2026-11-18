@@ -489,10 +489,10 @@
 
 /* Móvil: como antes. Ficha a pantalla completa con la imagen arriba y el
    texto debajo; el resto de pop-ups, ancho completo. */
-@media (max-width: 600px) {
+@media (max-width: 720px) {
   .cw-modal.detail-modal--xl,
   .cw-modal.sq-modal-wrap,
-  .cw-modal.tm-modal-wrap { width: 50%; max-height: 50vh; }
+  .cw-modal.tm-modal-wrap { width: 100%; max-height: 92vh; }
   .detail-modal--xl .cw-modal-body { padding: 16px; }
   .detail-modal--xl .detail-grid { grid-template-columns: 1fr; gap: 16px; }
   .detail-modal--xl .detail-gallery { order: 1; }
