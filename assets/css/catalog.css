@@ -471,7 +471,7 @@
 .detail-modal--xl .detail-gallery { order: 1; }
 .detail-modal--xl .detail-info { order: 2; }
 .detail-modal--xl .dg-main {
-  aspect-ratio: 1 / 1; max-height: 58vh; background: #f3f2f7;
+  aspect-ratio: 16 / 9; max-height: 58vh; background: #f3f2f7;
   display: grid; place-items: center;
 }
 .detail-modal--xl .dg-main img { width: 100%; height: 100%; object-fit: contain; }
