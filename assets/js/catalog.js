@@ -608,7 +608,6 @@
           '<div class="detail-docs">' +
             '<a class="doc-btn" href="./assets/docs/ficha-tecnica.pdf" target="_blank" rel="noopener"><span>📄</span>' + t('doc.tech') + '</a>' +
             '<a class="doc-btn" href="./assets/docs/guia-seleccion.pdf" target="_blank" rel="noopener"><span>🎨</span>' + t('doc.guide') + '</a>' +
-            '<a class="doc-btn" href="./assets/docs/seguridad.pdf" target="_blank" rel="noopener"><span>🛡️</span>' + t('doc.safety') + '</a>' +
           '</div>' +
           '<div class="detail-actions"><button class="btn primary" data-d-add="' + p.id + '">' + (p.kind === 'service' ? (p.bookable ? t('cat.public.book') : t('cat.public.request')) : t('cat.public.add')) + '</button>' +
           '<button class="btn ghost" data-d-share="' + p.id + '">↗ ' + t('common.share') + '</button></div></div>' +
