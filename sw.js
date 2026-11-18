@@ -1,7 +1,7 @@
 /* Arij Color · Service Worker
    Versión de caché única; solo se consulta la caché actual para no servir
    archivos antiguos. HTML network-first, estáticos cache-first. */
-const CACHE_VERSION = 'arij-v5';
+const CACHE_VERSION = 'arij-v6';
 const CACHE_NAME = 'arijcolor-' + CACHE_VERSION;
 
 const PRECACHE = [
@@ -11,25 +11,25 @@ const PRECACHE = [
   './dashboard.html',
   './catalogo.html',
   './porfolio.html',
-  './assets/css/portfolio.css?v=3',
-  './assets/js/portfolio.js?v=5',
+  './assets/css/portfolio.css?v=4',
+  './assets/js/portfolio.js?v=6',
   './manifest.webmanifest',
-  './assets/css/styles.css?v=21',
+  './assets/css/styles.css?v=22',
   './assets/css/home.css?v=11',
   './assets/css/landing.css?v=9',
-  './assets/css/catalog.css?v=14',
+  './assets/css/catalog.css?v=15',
   './assets/css/assistant.css?v=7',
   './assets/js/config.js?v=11',
-  './assets/js/i18n.js?v=25',
+  './assets/js/i18n.js?v=26',
   './assets/js/store.js?v=13',
   './assets/js/panel-i18n.js?v=4',
-  './assets/js/common.js?v=15',
+  './assets/js/common.js?v=16',
   './assets/js/policies.js?v=7',
   './assets/js/landing.js?v=2',
   './assets/js/auth.js?v=10',
   './assets/js/translate.js?v=2',
-  './assets/js/dashboard.js?v=22',
-  './assets/js/catalog.js?v=21',
+  './assets/js/dashboard.js?v=23',
+  './assets/js/catalog.js?v=22',
   './assets/js/assistant.js?v=9'
 ];
 

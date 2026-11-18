@@ -224,17 +224,24 @@
         var rating = Number(p.rating) > 0 ? Number(p.rating) : 0;
         var stars = rating ? '<span class="tm-stars">' + new Array(Math.round(rating) + 1).join('★') +
           (p.reviews_count ? ' <small>(' + p.reviews_count + ')</small>' : '') + '</span>' : '';
-        return '<button type="button" class="tm-card" data-pro="' + i + '">' +
-          '<span class="tm-photo">' + (p.photo_url ? '<img src="' + esc(p.photo_url) + '" alt="">' : esc((p.name || '?').charAt(0).toUpperCase())) + '</span>' +
-          '<span class="tm-body">' +
-            '<b>' + esc(p.name) + '</b>' +
-            (p.role ? '<small class="tm-role">' + esc(p.role) + '</small>' : '') +
-            (p.city ? '<small class="tm-city">📍 ' + esc(p.city) + '</small>' : '') +
-            stars +
-            (Number(p.price) > 0 ? '<span class="tm-price">' + money(p.price, S.biz.currency) + (p.price_note ? ' · ' + esc(p.price_note) : '') + '</span>' : '') +
-          '</span>' +
-          '<span class="sq-arrow" aria-hidden="true">›</span>' +
-        '</button>';
+        var cita = 'https://wa.me/' + proPhone(p) + '?text=' + encodeURIComponent(t('team.bookMsg', { name: p.name }));
+        return '<article class="tm-card">' +
+          '<button type="button" class="tm-card-main" data-pro="' + i + '">' +
+            '<span class="tm-photo">' + (p.photo_url ? '<img src="' + esc(p.photo_url) + '" alt="">' : esc((p.name || '?').charAt(0).toUpperCase())) + '</span>' +
+            '<span class="tm-body">' +
+              '<b>' + esc(p.name) + '</b>' +
+              (p.role ? '<small class="tm-role">' + esc(p.role) + '</small>' : '') +
+              (p.city ? '<small class="tm-city">📍 ' + esc(p.city) + '</small>' : '') +
+              stars +
+              (Number(p.price) > 0 ? '<span class="tm-price">' + money(p.price, S.biz.currency) + (p.price_note ? ' · ' + esc(p.price_note) : '') + '</span>' : '') +
+            '</span>' +
+          '</button>' +
+          (p.bio ? '<p class="tm-bio-line">' + esc(p.bio) + '</p>' : '') +
+          '<div class="tm-card-foot">' +
+            '<a class="btn primary small" href="' + cita + '" target="_blank" rel="noopener">📅 ' + t('team.book') + '</a>' +
+            '<button type="button" class="btn ghost small" data-pro="' + i + '">' + t('team.card') + ' ›</button>' +
+          '</div>' +
+        '</article>';
       }).join('') + '</div>';
     }
     return '<section class="cat-block" id="equipo"><div class="wrap">' + blockHead(sec) + body + '</div></section>';
@@ -260,11 +267,18 @@
     });
   }
 
+  // Teléfono de un profesional (si no tiene, el del negocio/soporte).
+  function proPhone(p) {
+    var tel = String(p.whatsapp || p.phone || '').replace(/[^\d]/g, '');
+    if (tel.length < 8) tel = String((S.biz && S.biz.whatsapp) || '').replace(/[^\d]/g, '');
+    if (tel.length < 8) tel = ((CW.config && String(CW.config.supportWhatsapp || '').replace(/[^\d]/g, '')) || CONTACT.wa);
+    return tel;
+  }
+
   // Pop-up del profesional con toda su ficha.
   function openPro(p) {
     if (!p) return;
-    var tel = String(p.whatsapp || p.phone || '').replace(/[^\d]/g, '');
-    if (tel.length < 8) tel = ((CW.config && String(CW.config.supportWhatsapp || '').replace(/[^\d]/g, '')) || CONTACT.wa);
+    var tel = proPhone(p);
     var cita = 'https://wa.me/' + tel + '?text=' + encodeURIComponent(t('team.bookMsg', { name: p.name }));
     var rating = Number(p.rating) > 0 ? Number(p.rating) : 0;
     var rows = [];
@@ -592,9 +606,9 @@
           }).join('') + '</div>' : '') +
           (CW.tx(p, 'description') ? '<p class="detail-desc">' + esc(CW.tx(p, 'description')).replace(/\n/g, '<br>') + '</p>' : '') +
           '<div class="detail-docs">' +
-            '<a class="doc-btn" href="./assets/docs/ficha-tecnica.pdf" download="ficha-tecnica.pdf"><span>📄</span>' + t('doc.tech') + '</a>' +
-            '<a class="doc-btn" href="./assets/docs/guia-seleccion.pdf" download="guia-seleccion.pdf"><span>🎨</span>' + t('doc.guide') + '</a>' +
-            '<a class="doc-btn" href="./assets/docs/seguridad.pdf" download="seguridad.pdf"><span>🛡️</span>' + t('doc.safety') + '</a>' +
+            '<a class="doc-btn" href="./assets/docs/ficha-tecnica.pdf" target="_blank" rel="noopener"><span>📄</span>' + t('doc.tech') + '</a>' +
+            '<a class="doc-btn" href="./assets/docs/guia-seleccion.pdf" target="_blank" rel="noopener"><span>🎨</span>' + t('doc.guide') + '</a>' +
+            '<a class="doc-btn" href="./assets/docs/seguridad.pdf" target="_blank" rel="noopener"><span>🛡️</span>' + t('doc.safety') + '</a>' +
           '</div>' +
           '<div class="detail-actions"><button class="btn primary" data-d-add="' + p.id + '">' + (p.kind === 'service' ? (p.bookable ? t('cat.public.book') : t('cat.public.request')) : t('cat.public.add')) + '</button>' +
           '<button class="btn ghost" data-d-share="' + p.id + '">↗ ' + t('common.share') + '</button></div></div>' +
@@ -1048,7 +1062,8 @@
     // porfolio y asistente) en móvil.
     var burger = $('[data-cat-burger]');
     var header = $('[data-cat-header]');
-    if (burger && header) {
+    if (burger && header && !burger._catBound) {
+      burger._catBound = true;
       burger.addEventListener('click', function () {
         var open = header.classList.toggle('menu-open');
         burger.setAttribute('aria-expanded', open ? 'true' : 'false');

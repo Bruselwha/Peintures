@@ -669,7 +669,7 @@ input.invalid, textarea.invalid, select.invalid { border-color: var(--bad) !impo
 .cat-burger:hover { border-color: var(--brand); color: var(--brand); }
 
 /* Menú: selector de categorías + buscador */
-.filter-inner { display: flex; gap: 8px; align-items: center; width: 100%; max-width: 560px; }
+.filter-inner { display: flex; gap: 8px; align-items: center; width: auto; max-width: none; flex-wrap: nowrap; }
 .filter-inner select {
   appearance: none; -webkit-appearance: none;
   font: inherit; font-weight: 650; color: var(--ink);
@@ -682,7 +682,7 @@ input.invalid, textarea.invalid, select.invalid { border-color: var(--bad) !impo
   background-repeat: no-repeat, no-repeat;
   background-position: right 14px center, left 14px center;
   background-size: 11px 7px, 15px 13px;
-  flex: 0 1 238px; min-width: 0; cursor: pointer;
+  flex: 0 0 auto; width: 212px; min-width: 0; cursor: pointer;
   transition: border-color .15s, box-shadow .15s;
 }
 .filter-inner select:hover { border-color: var(--brand-2); }
@@ -712,7 +712,7 @@ input.invalid, textarea.invalid, select.invalid { border-color: var(--bad) !impo
 [dir="rtl"] .filter-inner .search { background-position: right 14px center; padding: 10px 40px 10px 14px; }
 [dir="rtl"] .filter-inner select { padding: 10px 40px 10px 38px; background-position: left 14px center, right 14px center; }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .cat-head-actions { display: none; }
   .cat-burger { display: inline-flex; }
   .cat-brand { flex: 1; min-width: 0; }
@@ -1006,4 +1006,15 @@ input.invalid, textarea.invalid, select.invalid { border-color: var(--bad) !impo
 @media (max-width: 720px) {
   .sec-item { flex-direction: column; }
   .sec-num { margin-top: 0; }
+}
+
+/* Quitar/añadir tarjetas en el editor de secciones */
+.sec-item { position: relative; }
+.sec-del {
+  position: absolute; inset-block-start: 8px; inset-inline-end: 8px;
+  width: 28px; height: 28px; border-radius: 8px; font-size: .78rem; z-index: 2;
+}
+.sec-add {
+  margin-top: 10px; width: 100%; justify-content: center;
+  border-style: dashed; color: var(--brand);
 }

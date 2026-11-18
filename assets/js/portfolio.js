@@ -73,15 +73,18 @@
       (b.logo_url ? '<img src="' + esc(b.logo_url) + '" alt="" class="cat-logo">' : '<span class="cat-logo ph" style="background:' + esc(b.brand_color || '#5B1A80') + '">' + esc((b.name || 'M').charAt(0)) + '</span>') +
       '<div><b>' + brandNameHTML(b) + '</b><small>' + t('port.title') + '</small></div>';
 
-    var back = $('[data-pf-back]');
-    if (back) back.href = CW.url('catalogo.html') + '?b=' + encodeURIComponent(b.slug || '');
+    $$('[data-pf-back]').forEach(function (back) {
+      back.href = CW.url('catalogo.html') + '?b=' + encodeURIComponent(b.slug || '');
+    });
 
-    var wa = $('[data-pf-wa]');
-    if (b.whatsapp) {
-      wa.href = CW.api.waLink(b.whatsapp, 'Hola ' + CW.tx(b, 'name') + ', he visto vuestro porfolio.');
-    } else {
-      wa.hidden = true;
-    }
+    $$('[data-pf-wa]').forEach(function (wa) {
+      if (b.whatsapp) {
+        wa.href = CW.api.waLink(b.whatsapp, 'Hola ' + CW.tx(b, 'name') + ', he visto vuestro porfolio.');
+        wa.hidden = false;
+      } else {
+        wa.hidden = true;
+      }
+    });
 
     var cards = S.items.map(function (it, i) {
       var img = it.image_url
@@ -156,7 +159,34 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
+    // Menú móvil: hamburguesa que despliega idioma, catálogo y WhatsApp.
+    var header = $('[data-pf-header]');
+    var burger = $('[data-pf-burger]');
+    if (header && burger && !burger._pfBound) {
+      burger._pfBound = true;
+      burger.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var open = header.classList.toggle('menu-open');
+        burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+        burger.textContent = open ? '✕' : '☰';
+      });
+      document.addEventListener('click', function (e) {
+        if (!header.classList.contains('menu-open')) return;
+        if (header.contains(e.target)) return;
+        header.classList.remove('menu-open');
+        burger.setAttribute('aria-expanded', 'false');
+        burger.textContent = '☰';
+      });
+    }
+
     load().then(render);
-    window.addEventListener('cw:lang', function () { if (S.biz) render(); });
+    window.addEventListener('cw:lang', function () {
+      if (header && burger) {
+        header.classList.remove('menu-open');
+        burger.setAttribute('aria-expanded', 'false');
+        burger.textContent = '☰';
+      }
+      if (S.biz) render();
+    });
   });
 })(window, document);

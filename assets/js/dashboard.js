@@ -1518,46 +1518,62 @@
   // ---------------------------------------------------------------------
   // Contenido editable de las secciones del catálogo
   // (Calidad, Equipamiento, Reseñas y cabecera del Equipo).
+  // Se pueden añadir y quitar tarjetas, y cambiar imagen, título y texto.
   // ---------------------------------------------------------------------
   function secField(path, value, label, ph) {
     return '<label class="sec-field"><span>' + esc(label) + '</span>' +
       '<input data-sec="' + path + '" value="' + esc(value == null ? '' : value) + '"' +
       (ph ? ' placeholder="' + esc(ph) + '"' : '') + '></label>';
   }
-  function secArea(path, value, label, ph) {
-    return '<label class="sec-field"><span>' + esc(label) + '</span>' +
-      '<textarea data-sec="' + path + '" rows="2"' + (ph ? ' placeholder="' + esc(ph) + '"' : '') + '>' + esc(value || '') + '</textarea></label>';
-  }
-  function secImage(path, value) {
-    return '<div class="sec-field sec-wide"><span>' + t('sec.item.image') + '</span>' +
-      '<div class="sec-img-row"><input data-sec="' + path + '" value="' + esc(value || '') + '" placeholder="https://…">' +
-      '<button type="button" class="btn ghost small" data-sec-img="' + path + '">🖼️</button></div></div>';
-  }
-  function sectionsEditor(b) {
-    var all = CW.sections(b);
 
-    function itemRow(key, i, it) {
-      var base = key + '.items.' + i;
-      if (key === 'reviews') {
-        return '<div class="sec-item"><span class="sec-num">' + (i + 1) + '</span><div class="sec-fields">' +
-          '<div class="sec-row">' + secField(base + '.name', it.name, t('sec.item.name'), 'Salma B.') +
-            secField(base + '.city', it.city, t('sec.item.city'), 'Casablanca') +
-            '<label class="sec-field sec-narrow"><span>' + t('sec.item.stars') + '</span><input type="number" min="1" max="5" data-sec="' + base + '.stars" value="' + esc(it.stars || 5) + '"></label>' +
-          '</div>' + secArea(base + '.text', it.text, t('sec.item.text'), 'Explica la experiencia del cliente…') +
-        '</div></div>';
-      }
-      return '<div class="sec-item"><span class="sec-num">' + (i + 1) + '</span><div class="sec-fields">' +
+  // Campo dentro de una tarjeta (se recoge por tarjeta, no por ruta fija).
+  function secItemField(field, label, value, ph, type) {
+    var id = 'data-fld="' + field + '"';
+    if (type === 'area') {
+      return '<label class="sec-field"><span>' + esc(label) + '</span>' +
+        '<textarea ' + id + ' rows="2"' + (ph ? ' placeholder="' + esc(ph) + '"' : '') + '>' + esc(value || '') + '</textarea></label>';
+    }
+    return '<label class="sec-field' + (field === 'icon' ? ' sec-narrow' : '') + '"><span>' + esc(label) + '</span>' +
+      '<input ' + id + ' value="' + esc(value == null ? '' : value) + '"' +
+      (ph ? ' placeholder="' + esc(ph) + '"' : '') + '>' + '</label>';
+  }
+
+  function secItemRow(key, it) {
+    it = it || {};
+    var image = '<div class="sec-field sec-wide"><span>' + t('sec.item.image') + '</span>' +
+      '<div class="sec-img-row"><input data-fld="image" class="sec-img-input" value="' + esc(it.image || '') + '" placeholder="https://… o elige de la biblioteca">' +
+      '<button type="button" class="btn ghost small" data-sec-img>🖼️</button></div></div>';
+
+    var fields;
+    if (key === 'reviews') {
+      fields =
         '<div class="sec-row">' +
-          '<label class="sec-field sec-narrow"><span>' + t('sec.item.icon') + '</span><input data-sec="' + base + '.icon" value="' + esc(it.icon || '') + '" placeholder="🏠"></label>' +
-          secField(base + '.title', it.title, t('sec.title'), key === 'equipment' ? 'Rouleaux et manchons' : 'Décoration') +
-          (key === 'equipment' ? secField(base + '.sub', it.sub, t('sec.item.sub'), 'ARIJ COLOR TOOLS') : '') +
+          secItemField('name', t('sec.item.name'), it.name, 'Salma B.') +
+          secItemField('city', t('sec.item.city'), it.city, 'Casablanca') +
+          secItemField('stars', t('sec.item.stars'), it.stars || 5, '5') +
         '</div>' +
-        secField(base + '.text', it.text, t('sec.item.text'), key === 'equipment' ? 'Courte description de l’accessoire' : 'Texte de la carte') +
-        secArea(base + '.details', it.details, t('sec.item.details'), 'Texto que aparece al abrir el pop-up') +
-        secImage(base + '.image', it.image) +
-      '</div></div>';
+        secItemField('text', t('sec.item.text'), it.text, 'Explica la experiencia del cliente…', 'area');
+    } else {
+      fields =
+        '<div class="sec-row">' +
+          secItemField('icon', t('sec.item.icon'), it.icon, '🏠') +
+          secItemField('title', t('sec.title'), it.title, key === 'equipment' ? 'Rouleaux et manchons' : 'Décoration') +
+          (key === 'equipment' ? secItemField('sub', t('sec.item.sub'), it.sub, 'ARIJ COLOR TOOLS') : '') +
+        '</div>' +
+        secItemField('text', t('sec.item.text'), it.text, key === 'equipment' ? 'Courte description de l’accessoire' : 'Texte de la carte') +
+        secItemField('details', t('sec.item.details'), it.details, 'Texto que aparece al abrir el pop-up', 'area') +
+        image;
     }
 
+    return '<div class="sec-item" data-sec-item="' + key + '">' +
+      '<span class="sec-num"></span>' +
+      '<button type="button" class="icon-btn sec-del" data-sec-del title="' + esc(t('common.delete')) + '" aria-label="' + esc(t('common.delete')) + '">✕</button>' +
+      '<div class="sec-fields">' + fields + '</div>' +
+    '</div>';
+  }
+
+  function sectionsEditor(b) {
+    var all = CW.sections(b);
     var PH = {
       quality: ['QUALITÉ ET CONFIANCE', 'Des solutions pour chaque projet', 'Des produits pour les particuliers, peintres professionnels, distributeurs et entreprises.'],
       equipment: ['ÉQUIPEMENT', 'Accessoires de peinture', 'Tout le nécessaire pour préparer, appliquer et finir chaque travail.'],
@@ -1574,7 +1590,10 @@
           secField(key + '.title', sec.title, t('sec.title'), ph[1]) +
         '</div>' +
         secField(key + '.sub', sec.sub, t('sec.sub'), ph[2]) +
-        '<div class="sec-items">' + (sec.items || []).map(function (it, i) { return itemRow(key, i, it); }).join('') + '</div>');
+        '<div class="sec-items" data-sec-items="' + key + '">' +
+          (sec.items || []).map(function (it) { return secItemRow(key, it); }).join('') +
+        '</div>' +
+        '<button type="button" class="btn ghost small sec-add" data-sec-add="' + key + '">+ ' + t('sec.add') + '</button>');
     }
 
     return '<div class="sec-editor">' +
@@ -1589,7 +1608,62 @@
       '</div>';
   }
 
-  // Recoge los campos del editor (el objeto ya tiene la estructura completa).
+  // Numeración, añadir/quitar tarjetas y selector de imagen.
+  function bindSecEditor(view) {
+    function renumber() {
+      $$('[data-sec-items]', view).forEach(function (wrap) {
+        $$('[data-sec-item]', wrap).forEach(function (row, i) {
+          var n = $('.sec-num', row); if (n) n.textContent = i + 1;
+        });
+      });
+    }
+    function bindImage(row) {
+      var btn = $('[data-sec-img]', row); if (!btn || btn._bound) return;
+      btn._bound = true;
+      btn.addEventListener('click', function () {
+        openImagePicker(1, function (urls) {
+          if (urls && urls[0]) {
+            var input = $('.sec-img-input', row);
+            if (input) input.value = urls[0];
+          }
+        });
+      });
+    }
+    function bindRow(row) {
+      bindImage(row);
+      var del = $('[data-sec-del]', row);
+      if (del && !del._bound) {
+        del._bound = true;
+        del.addEventListener('click', function () {
+          var wrap = row.parentNode;
+          row.remove();
+          if (wrap && !$('[data-sec-item]', wrap)) {
+            // Deja siempre una tarjeta para poder escribir.
+            wrap.insertAdjacentHTML('beforeend', secItemRow(wrap.dataset.secItems, {}));
+            bindRow($('[data-sec-item]', wrap));
+          }
+          renumber();
+        });
+      }
+    }
+    $$('[data-sec-item]', view).forEach(bindRow);
+    $$('[data-sec-add]', view).forEach(function (btn) {
+      if (btn._bound) return; btn._bound = true;
+      btn.addEventListener('click', function () {
+        var key = btn.dataset.secAdd;
+        var wrap = $('[data-sec-items="' + key + '"]', view);
+        if (!wrap) return;
+        wrap.insertAdjacentHTML('beforeend', secItemRow(key, {}));
+        var rows = $$('[data-sec-item]', wrap);
+        bindRow(rows[rows.length - 1]);
+        renumber();
+        rows[rows.length - 1].scrollIntoView({ block: 'nearest' });
+      });
+    });
+    renumber();
+  }
+
+  // Recoge el editor: los campos de cabecera por ruta y las tarjetas por bloque.
   function collectSections(view, b) {
     var out = JSON.parse(JSON.stringify(CW.sections(b)));
     $$('[data-sec]', view).forEach(function (inp) {
@@ -1601,6 +1675,18 @@
     $$('[data-sec-en]', view).forEach(function (chk) {
       if (!out[chk.dataset.secEn]) out[chk.dataset.secEn] = {};
       out[chk.dataset.secEn].enabled = chk.checked;
+    });
+    ['quality', 'equipment', 'reviews'].forEach(function (key) {
+      var wrap = $('[data-sec-items="' + key + '"]', view);
+      if (!wrap) return;
+      out[key].items = $$('[data-sec-item]', wrap).map(function (row) {
+        var item = {};
+        $$('[data-fld]', row).forEach(function (inp) {
+          var k = inp.dataset.fld;
+          item[k] = (k === 'stars') ? Number(inp.value || 5) : inp.value;
+        });
+        return item;
+      });
     });
     return out;
   }
@@ -1886,16 +1972,7 @@
       });
     }
     if (id === 'info') $('[data-gocur]', view).addEventListener('click', function () { location.hash = '#settings/currency'; });
-    if (id === 'sections') {
-      $$('[data-sec-img]', view).forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          openImagePicker(1, function (urls) {
-            var input = $('[data-sec="' + btn.dataset.secImg + '"]', view);
-            if (urls && urls[0] && input) input.value = urls[0];
-          });
-        });
-      });
-    }
+    if (id === 'sections') bindSecEditor(view);
 
     function doSave() {
       var patch = {};

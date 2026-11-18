@@ -50,10 +50,10 @@
 }
 
 /* Pop-up de un trabajo */
-.pf-modal { max-width: 1050px; }
+.pf-modal { width: min(1500px, 94vw); max-height: 92vh; }
 .pf-modal-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 20px; align-items: start; }
 .pf-modal-media { background: #f2eef7; border-radius: 14px; overflow: hidden; display: grid; place-items: center; }
-.pf-modal-media img { width: 100%; height: auto; max-height: 60vh; object-fit: contain; display: block; }
+.pf-modal-media img { width: 100%; height: auto; max-height: 70vh; object-fit: contain; display: block; }
 .pf-modal-body h4 { margin: 18px 0 8px; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .pf-modal-body h4:first-child { margin-top: 0; }
 .pf-modal-desc { margin: 0 0 6px; color: var(--ink-2); line-height: 1.65; }

@@ -497,14 +497,14 @@
       title: 'Accessoires de peinture',
       sub: 'Tout le nécessaire pour préparer, appliquer et finir chaque travail.',
       items: [
-        { icon: '🖌️', title: 'Brosses professionnelles', sub: 'ARIJ COLOR TOOLS', text: 'Brosses et pinceaux pour les angles, les finitions et les retouches.', image: '', details: '' },
-        { icon: '🧹', title: 'Rouleaux et manchons', sub: 'ARIJ COLOR TOOLS', text: 'Manchons de différentes fibres pour murs et plafonds, selon le rendu souhaité.', image: '', details: '' },
-        { icon: '🔺', title: 'Spatules et taloches', sub: 'ARIJ COLOR TOOLS', text: 'Pour reboucher, lisser et préparer les surfaces avant la peinture.', image: '', details: '' },
-        { icon: '⬜', title: 'Abrasifs et papiers', sub: 'ARIJ COLOR TOOLS', text: 'Papiers et abrasifs pour poncer et obtenir une surface régulière.', image: '', details: '' },
-        { icon: '🎗️', title: 'Rubans de masquage', sub: 'ARIJ COLOR TOOLS', text: 'Rubans qui protègent les plinthes, vitres et contours pendant les travaux.', image: '', details: '' },
-        { icon: '🪣', title: 'Seaux et bacs', sub: 'ARIJ COLOR TOOLS', text: 'Seaux, bacs et grilles pour préparer, mélanger et charger les outils.', image: '', details: '' },
-        { icon: '🛡️', title: 'Bâches de protection', sub: 'ARIJ COLOR TOOLS', text: 'Bâches et films pour protéger le sol et le mobilier.', image: '', details: '' },
-        { icon: '⚙️', title: 'Pistolets et machines', sub: 'ARIJ COLOR TOOLS', text: 'Pistolets et machines pour les grandes surfaces et les finitions régulières.', image: '', details: '' }
+        { icon: '🖌️', title: 'Brosses professionnelles', sub: 'ARIJ COLOR TOOLS', text: 'Brosses et pinceaux pour les angles, les finitions et les retouches.', image: 'assets/img/equip/brosses.jpg', details: '' },
+        { icon: '🧹', title: 'Rouleaux et manchons', sub: 'ARIJ COLOR TOOLS', text: 'Manchons de différentes fibres pour murs et plafonds, selon le rendu souhaité.', image: 'assets/img/equip/rouleaux.jpg', details: '' },
+        { icon: '🔺', title: 'Spatules et taloches', sub: 'ARIJ COLOR TOOLS', text: 'Pour reboucher, lisser et préparer les surfaces avant la peinture.', image: 'assets/img/equip/spatules.jpg', details: '' },
+        { icon: '⬜', title: 'Abrasifs et papiers', sub: 'ARIJ COLOR TOOLS', text: 'Papiers et abrasifs pour poncer et obtenir une surface régulière.', image: 'assets/img/equip/abrasifs.jpg', details: '' },
+        { icon: '🎗️', title: 'Rubans de masquage', sub: 'ARIJ COLOR TOOLS', text: 'Rubans qui protègent les plinthes, vitres et contours pendant les travaux.', image: 'assets/img/equip/rubans.jpg', details: '' },
+        { icon: '🪣', title: 'Seaux et bacs', sub: 'ARIJ COLOR TOOLS', text: 'Seaux, bacs et grilles pour préparer, mélanger et charger les outils.', image: 'assets/img/equip/seaux.jpg', details: '' },
+        { icon: '🛡️', title: 'Bâches de protection', sub: 'ARIJ COLOR TOOLS', text: 'Bâches et films pour protéger le sol et le mobilier.', image: 'assets/img/equip/baches.jpg', details: '' },
+        { icon: '⚙️', title: 'Pistolets et machines', sub: 'ARIJ COLOR TOOLS', text: 'Pistolets et machines pour les grandes surfaces et les finitions régulières.', image: 'assets/img/equip/pistolets.jpg', details: '' }
       ]
     },
     reviews: {

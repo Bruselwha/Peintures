@@ -1,3 +1,98 @@
+# v30 · Cabecera, hamburguesa del porfolio, equipo, pop-ups y FAQ
+
+## 1. Cabecera del catálogo
+
+El selector «Todas las categorías» y los dos botones **Portfolio** y **Equipo**
+van ahora en **una sola línea** (antes se partían en dos y quedaban
+descentrados):
+
+- Menú sin `flex-wrap`, selector de 212 px y botones compactos de 44 px.
+- Por debajo de 1320 px se oculta el subtítulo de los botones (siguen viéndose
+  título e icono); por debajo de **1100 px** todo pasa al menú de la hamburguesa
+  (antes 900), así no se amontona en tablets.
+
+## 2. Hamburguesa en el porfolio
+
+La página del porfolio **no tenía** menú móvil: al ocultarse las acciones no
+quedaba ningún botón. Ahora tiene hamburguesa con el mismo comportamiento que el
+catálogo: idioma, «Ver catálogo» y WhatsApp. Se cierra al tocar fuera y al
+cambiar de idioma.
+
+## 3. Tarjetas de Equipo completas
+
+Cada tarjeta muestra **foto, nombre, rol, ciudad, valoración, precio y
+biografía**, con dos botones: **📅 Pedir cita** (WhatsApp del profesional, con
+mensaje ya escrito) y **ver ficha**. El pop-up mantiene toda la información y
+los enlaces de web y teléfono.
+
+## 4. Pop-ups casi a pantalla completa
+
+La ficha de producto, las tarjetas de Calidad/Equipamiento y la ficha del
+profesional pasan a **94 % de ancho y 92 % de alto** (móvil 94/96 %), con imagen
+más grande, para que no haga falta hacer scroll. El pop-up del porfolio, igual.
+
+## 5. Imágenes de los accesorios
+
+Los 8 accesorios de **ÉQUIPEMENT** tienen imagen propia en
+`assets/img/equip/` (brosses, rouleaux, spatules, abrasifs, rubans, seaux,
+bâches, pistolets) y se ven en la tarjeta y en el pop-up.
+
+## 6. PDF con datos reales y apertura en el navegador
+
+Los tres documentos se han rehecho con la información real del catálogo:
+
+- **Ficha técnica:** ARIJ COLOR MuroPlus (5 L, blanca mate, int/ext, rendimiento
+  10-12 m²/L, secado 2 h / 4-6 h, precio 65 MAD promo / 80 MAD), preparación,
+  consejos, accesorios con fotos y servicios.
+- **Guía de selección:** tabla por pieza y por soporte, cálculo de cantidad,
+  referencias reales con precios y accesorios.
+- **Seguridad:** productos concernidos, precauciones, almacenamiento,
+  eliminación y urgencias.
+
+Los botones usan `target="_blank"` (sin `download`) y `vercel.json` envía
+`Content-Disposition: inline`: **se abren en el navegador**.
+
+## 7. Administrar Calidad y Accesorios
+
+El editor *Ajustes → Contenido del catálogo* permite ahora, en cada sección:
+
+- **Añadir** tarjetas y **eliminar** las que sobren (con ✕).
+- Cambiar **icono, título, subtítulo, texto, información del pop-up e imagen**
+  (desde la biblioteca o una URL).
+- Activar/desactivar la sección y editar antetítulo, título y subtítulo.
+
+## 8. Asistente: preguntas frecuentes de pintura
+
+Nuevas respuestas en español, francés y árabe:
+
+- **Preparación de la pared** (pasos, yeso, madera, metal y humedad).
+- **Rendimiento por litro** (10-12 m²/L; calcula los litros si dices los m²:
+  «tengo 40 m²» → 7,3 L).
+- **Secado** (2 h al tacto, 4-6 h para repintar, 7 días de curado).
+- **Colores a medida** (muestra o RAL/NCS, bote de prueba).
+
+Con botones nuevos «Preparar la pared» y «Rendimiento», y acceso al PDF de la
+guía desde la respuesta.
+
+## Caché
+
+`CACHE_VERSION` → `arij-v6`; `styles.css` 22, `catalog.css` 15,
+`portfolio.css` 4, `i18n.js` 26, `common.js` 16, `catalog.js` 22,
+`dashboard.js` 23, `portfolio.js` 6.
+
+## Verificación
+
+- **27 pruebas jsdom** de catálogo, porfolio y asistente: grupo de cabecera,
+  imágenes de los 8 accesorios, tarjeta de equipo (foto, bio, ciudad,
+  valoración, precio y cita), PDFs en pestaña nueva, pop-ups amplios, las 4
+  preguntas nuevas del asistente (incluido el cálculo de litros), hamburguesa
+  del porfolio y PDFs con el producto y precio reales.
+- **24 pruebas jsdom del panel**: incluye añadir una tarjeta, eliminarla y
+  guardar la lista con su imagen.
+- Todas correctas; 0 claves de traducción sin traducir.
+
+---
+
 # v29 · Ficha amplia, secciones editables, equipo y accesorios
 
 ## 1. Ficha de producto (70 % de la pantalla)

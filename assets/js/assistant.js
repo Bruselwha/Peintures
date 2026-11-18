@@ -125,10 +125,14 @@
     hours: ['horario', 'abierto', 'cerrado', 'abre', 'cierra', 'atienden', 'a que hora'],
     categories: ['categoria', 'que vendes', 'que tienes', 'que ofreces', 'servicios', 'catalogo', 'productos'],
     order: ['pedir', 'pedido', 'comprar', 'reservar', 'cita', 'apartar', 'encargar', 'quiero un', 'quiero una'],
-    options: ['color', 'colores', 'tamano', 'tamanos', 'talla', 'tallas', 'litro', 'litros', 'peso', 'pesos', 'medida', 'medidas', 'opciones', 'variedades', 'presentacion', 'acabado', 'acabados'],
+    prep: ['prepar', 'preparar', 'preparo', 'preparacion', 'preparar pared', 'preparar la pared', 'rebocar', 'masilla', 'enduire', 'enduit', 'imprimacion', 'imprimante', 'sous-couche', 'subcapa', 'lijar', 'lija', 'limpiar pared', 'humedad', 'humidade', 'gotelé', 'gotel'],
+    yieldq: ['rendimiento', 'cuanto cubre', 'cuantos metros', 'metros cuadrados', 'm2 por litro', 'cobertura', 'cubrir', 'cuanta pintura', 'litros necesito', 'cantidad de pintura', 'cuantos litros', 'bote', 'pot de peinture'],
+    drying: ['secado', 'seca', 'secar', 'tiempo de secado', 'cuanto tarda en secar', 'segunda mano', 'repintar', 'retoque', 'retoques'],
+    customcolor: ['color a medida', 'colores a medida', 'a medida', 'tenir', 'tenido', 'mezcla', 'mezclar', 'nuancier', 'carta de colores', 'tono personalizado', 'personalizado', 'pigmento', 'teinte sur mesure'],
     stock: ['stock', 'disponible', 'disponibilidad', 'hay existencias', 'tienen existencias', 'queda'],
     discount: ['descuento', 'oferta', 'ofertas', 'rebaja', 'promocion', 'promociones', 'barato'],
     about: ['quienes sois', 'quienes son', 'sobre vosotros', 'que empresa', 'a que os dedicais', 'de que sois'],
+    options: ['color', 'colores', 'tamano', 'tamanos', 'talla', 'tallas', 'litro', 'litros', 'peso', 'pesos', 'medida', 'medidas', 'opciones', 'variedades', 'presentacion', 'acabado', 'acabados'],
     price: ['precio', 'cuanto', 'cuesta', 'vale', 'coste', 'costo']
   };
 
@@ -236,6 +240,10 @@
     if (hits.length) {
       if (intent === 'options') return answerOptions(d, hits);
       if (intent === 'stock') return answerStock(d, hits);
+      if (intent === 'yieldq') return answerYield(msg);
+      if (intent === 'prep') return answerPrep(msg);
+      if (intent === 'drying') return answerDrying(msg);
+      if (intent === 'customcolor') return answerCustomColor(msg);
       if (intent === 'price') {
         say(t('as.priceAsk'), { quick: [t('as.q.order'), t('as.q.options')] });
         return showProducts(hits);
@@ -248,6 +256,10 @@
     if (intent === 'farewell') { say(t('as.farewell')); return; }
     if (intent === 'contact' || intent === 'human') return answerContact(d);
     if (intent === 'location') return answerLocation(d);
+    if (intent === 'prep') return answerPrep(msg);
+    if (intent === 'yieldq') return answerYield(msg);
+    if (intent === 'drying') return answerDrying(msg);
+    if (intent === 'customcolor') return answerCustomColor(msg);
     if (intent === 'delivery') return answerDelivery(d);
     if (intent === 'payment') return answerPayment(d);
     if (intent === 'invoice') { say(t('as.invoice'), { quick: [t('as.q.order'), t('as.q.contact')] }); return; }
@@ -265,7 +277,7 @@
     }
     // Sin intención clara: menú de ayuda, nunca silencio.
     say(t('as.fallback'),
-      { quick: [t('as.q.cats'), t('as.q.options'), t('as.q.stock'), t('as.q.hours'), t('as.q.contact'), t('as.q.order')] });
+      { quick: [t('as.q.cats'), t('as.q.options'), t('as.q.prep'), t('as.q.yield'), t('as.q.hours'), t('as.q.contact'), t('as.q.order')] });
   }
 
   // --------------------------------------------------------- Respuestas
@@ -274,7 +286,7 @@
     if (A.els.name) A.els.name.textContent = t('as.title') + (name ? ' · ' + name : '');
     if (A.els.avatar && d.biz) A.els.avatar.textContent = (d.biz.name || 'M').trim().charAt(0).toUpperCase();
     say(t('as.greet', { name: name }),
-      { quick: [t('as.q.order'), t('as.q.cats'), t('as.q.options'), t('as.q.hours'), t('as.q.contact'), t('as.q.search')] });
+      { quick: [t('as.q.order'), t('as.q.cats'), t('as.q.options'), t('as.q.prep'), t('as.q.yield'), t('as.q.hours'), t('as.q.contact')] });
   }
 
   function showProducts(list) {
@@ -383,6 +395,49 @@
     var b = d.biz;
     say(t('as.about', { name: '<b>' + esc(b.name) + '</b>', desc: esc(CW.tx(b, 'description') || '') }),
       { quick: [t('as.q.cats'), t('as.q.order'), t('as.q.contact')] });
+  }
+
+  // Abre un documento de la web (ficha técnica, guía o seguridad).
+  function openDoc(file) {
+    try { window.open('./assets/docs/' + file, '_blank', 'noopener'); } catch (e) {}
+  }
+
+  function answerPrep(msg) {
+    var n = norm(msg), extra = '';
+    if (/humed|humid|moisiss|moho/.test(n)) extra = t('as.prepDamp');
+    else if (/madera|bois|wood/.test(n)) extra = t('as.prepWood');
+    else if (/metal|metálic|metall/.test(n)) extra = t('as.prepMetal');
+    else if (/yeso|platre|plâtre|plaster|nuevo/.test(n)) extra = t('as.prepPlaster');
+    say(t('as.prepIntro') +
+      '<span class="prod">' + t('as.prepSteps') + '</span>' +
+      (extra ? '<span class="prod">' + extra + '</span>' : ''),
+      { quick: [t('as.q.order'), t('as.q.contact'),
+        { label: '📄 ' + t('doc.guide'), action: function () { openDoc('guia-seleccion.pdf'); } }] });
+  }
+
+  function answerYield(msg) {
+    var m = norm(msg).match(/(\d+(?:[.,]\d+)?)\s*(m2|m²|metros|metres|mètres|meter)/);
+    var html = t('as.yieldInfo');
+    if (m) {
+      var area = parseFloat(m[1].replace(',', '.'));
+      var liters = Math.ceil((area * 2 / 11) * 10) / 10;
+      var pot = liters <= 5 ? '5 L' : (liters <= 10 ? '2 × 5 L' : Math.ceil(liters / 5) + ' × 5 L');
+      html += '<span class="prod">' + t('as.yieldCalc', { area: area, liters: liters, pot: pot }) + '</span>';
+    } else {
+      html += '<span class="prod">' + t('as.yieldAsk') + '</span>';
+    }
+    say(html, { quick: [t('as.q.order'), t('as.q.contact')] });
+  }
+
+  function answerDrying() {
+    say(t('as.drying') + '<span class="prod">' + t('as.dryingTip') + '</span>',
+      { quick: [t('as.q.order'), t('as.q.prep'), t('as.q.contact')] });
+  }
+
+  function answerCustomColor() {
+    say(t('as.customColor') + '<span class="prod">' + t('as.customColorTip') + '</span>',
+      { quick: [t('as.q.order'), t('as.q.contact'),
+        { label: '📄 ' + t('doc.guide'), action: function () { openDoc('guia-seleccion.pdf'); } }] });
   }
 
   function answerDelivery(d) {
