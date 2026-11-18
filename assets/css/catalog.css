@@ -497,7 +497,7 @@
   .detail-modal--xl .detail-grid { grid-template-columns: 1fr; gap: 16px; }
   .detail-modal--xl .detail-gallery { order: 1; }
   .detail-modal--xl .detail-info { order: 2; }
-  .detail-modal--xl .dg-main { aspect-ratio: 4 / 3; max-height: 38vh; }
+  .detail-modal--xl .dg-main { aspect-ratio: 4 / 3; max-height: 30vh; }
   .detail-modal--xl .detail-info h2 { font-size: 1.3rem; }
   .detail-docs { gap: 6px; }
   .doc-btn { flex: 1 1 46%; justify-content: center; font-size: .78rem; padding: 9px 8px; }
