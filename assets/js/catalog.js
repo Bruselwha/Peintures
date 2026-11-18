@@ -9,7 +9,7 @@
   var t = function (k, v) { return CW.i18n.t(k, v); };
 
   var S = {
-    biz: null, cats: [], products: [], portfolio: [],
+    biz: null, cats: [], products: [], portfolio: [], team: [],
     filterType: 'all', filterCat: '', q: '',
     cart: [] // {id, name, price, qty, kind, image}
   };
@@ -26,13 +26,7 @@
     address: 'Casablanca, Marruecos'
   };
 
-  // Reseñas de ejemplo: edita aquí los nombres, ciudades y estrellas. Los
-  // textos están en i18n.js (rev.1.text, rev.2.text, rev.3.text).
-  var REVIEWS = [
-    { name: 'Salma B.', city: 'Casablanca', stars: 5, key: 1 },
-    { name: 'Youssef K.', city: 'Rabat', stars: 5, key: 2 },
-    { name: 'Nadia E.', city: 'Casablanca', stars: 5, key: 3 }
-  ];
+
 
   // ---- Datos ----------------------------------------------------------
   // El catálogo de ejemplo (`?b=demo`) se puede editar desde el panel:
@@ -66,10 +60,12 @@
       return Promise.all([
         CW.store.listCategories(biz.id),
         CW.store.listProducts(biz.id, { activeOnly: true }),
-        CW.store.listPortfolio(biz.id, { activeOnly: true }).catch(function () { return []; })
+        CW.store.listPortfolio(biz.id, { activeOnly: true }).catch(function () { return []; }),
+        (CW.store.listProfessionals ? CW.store.listProfessionals(biz.id, { activeOnly: true }) : Promise.resolve([])).catch(function () { return []; })
       ]).then(function (r) {
         S.cats = r[0]; S.products = r[1];
         S.portfolio = (r[2] || []).filter(function (i) { return i.active !== false; });
+        S.team = (r[3] || []).filter(function (p) { return p.active !== false; });
       });
     });
   }
@@ -95,7 +91,7 @@
     }
     brand.innerHTML =
       (b.logo_url ? '<img src="' + esc(b.logo_url) + '" alt="" class="cat-logo">' : '<span class="cat-logo ph" style="background:' + esc(b.brand_color) + '">' + esc((CW.tx(b, 'name') || 'M').charAt(0)) + '</span>') +
-      '<div><b>' + esc(CW.tx(b, 'name')) + '</b>' + (CW.tx(b, 'description') ? '<small>' + esc(CW.tx(b, 'description')) + '</small>' : '') + '</div>';
+      '<div><b>' + brandNameHTML(b) + '</b>' + (CW.tx(b, 'description') ? '<small>' + esc(CW.tx(b, 'description')) + '</small>' : '') + '</div>';
 
     // Enlace al porfolio: solo si el negocio ha publicado trabajos.
     $$('[data-wa-header]').forEach(function (wa) {
@@ -147,6 +143,9 @@
 
     root.innerHTML = hero + info +
       '<section class="wrap cat-grid" id="categorias" data-grid></section>' +
+      teamHTML() +
+      qualityHTML() +
+      equipmentHTML() +
       reviewsHTML() +
       contactHTML() +
       '<footer class="cat-footer"><div class="wrap"><div>' + esc(CW.tx(b, 'name')) + ' · Arij Color</div>' +
@@ -158,26 +157,166 @@
         '</nav></div></footer>';
 
     bindFilters();
+    bindSections();
     drawGrid();
     updateCartUI();
   }
 
+  // Abre los pop-ups de Calidad, Equipamiento y Equipo.
+  function bindSections() {
+    $$('[data-sq]').forEach(function (b) {
+      b.addEventListener('click', function () { openSectionItem(b.dataset.sq, Number(b.dataset.i)); });
+    });
+    $$('[data-pro]').forEach(function (b) {
+      b.addEventListener('click', function () { openPro(S.team[Number(b.dataset.pro)]); });
+    });
+  }
+
+  // ---- Secciones editables: Calidad, Equipamiento y Equipo -------------
+  function blockHead(sec) {
+    return '<div class="cat-block-head">' +
+      (sec.kicker ? '<span class="cat-block-kicker">' + esc(sec.kicker) + '</span>' : '') +
+      '<h2>' + esc(sec.title) + '</h2>' +
+      (sec.sub ? '<p>' + esc(sec.sub) + '</p>' : '') +
+    '</div>';
+  }
+
+  function qualityHTML() {
+    var sec = CW.sections(S.biz).quality;
+    if (!sec || sec.enabled === false) return '';
+    var cards = sec.items.map(function (it, i) {
+      return '<button type="button" class="sq-card sq-card--q" data-sq="quality" data-i="' + i + '">' +
+        '<span class="sq-icon" aria-hidden="true">' + esc(it.icon || '•') + '</span>' +
+        '<b class="sq-title">' + esc(it.title) + '</b>' +
+        '<span class="sq-text">' + esc(it.text || '') + '</span>' +
+      '</button>';
+    }).join('');
+    return '<section class="cat-block" id="qualite"><div class="wrap">' + blockHead(sec) +
+      '<div class="sq-grid sq-grid--q">' + cards + '</div></div></section>';
+  }
+
+  function equipmentHTML() {
+    var sec = CW.sections(S.biz).equipment;
+    if (!sec || sec.enabled === false) return '';
+    var cards = sec.items.map(function (it, i) {
+      return '<button type="button" class="sq-card sq-card--eq" data-sq="equipment" data-i="' + i + '">' +
+        '<span class="sq-thumb" aria-hidden="true">' + (it.image ? '<img src="' + esc(it.image) + '" alt="">' : esc(it.icon || '•')) + '</span>' +
+        '<span class="sq-body"><b>' + esc(it.title) + '</b>' +
+          (it.sub ? '<small>' + esc(it.sub) + '</small>' : '') +
+        '</span>' +
+        '<span class="sq-arrow" aria-hidden="true">›</span>' +
+      '</button>';
+    }).join('');
+    return '<section class="cat-block cat-block--soft" id="equipement"><div class="wrap">' + blockHead(sec) +
+      '<div class="sq-grid sq-grid--eq">' + cards + '</div></div></section>';
+  }
+
+  function teamHTML() {
+    var sec = CW.sections(S.biz).team;
+    if (!sec || sec.enabled === false) return '';
+    var wa = 'https://wa.me/' + ((CW.config && String(CW.config.supportWhatsapp || '').replace(/[^\d]/g, '')) || CONTACT.wa) + '?text=' + encodeURIComponent(t('team.ctaMsg'));
+    var body;
+    if (!S.team.length) {
+      body = '<div class="tm-empty"><p>' + t('team.empty') + '</p>' +
+        '<a class="btn primary small" href="' + wa + '" target="_blank" rel="noopener">💬 ' + t('team.cta') + '</a></div>';
+    } else {
+      body = '<div class="tm-grid">' + S.team.map(function (p, i) {
+        var rating = Number(p.rating) > 0 ? Number(p.rating) : 0;
+        var stars = rating ? '<span class="tm-stars">' + new Array(Math.round(rating) + 1).join('★') +
+          (p.reviews_count ? ' <small>(' + p.reviews_count + ')</small>' : '') + '</span>' : '';
+        return '<button type="button" class="tm-card" data-pro="' + i + '">' +
+          '<span class="tm-photo">' + (p.photo_url ? '<img src="' + esc(p.photo_url) + '" alt="">' : esc((p.name || '?').charAt(0).toUpperCase())) + '</span>' +
+          '<span class="tm-body">' +
+            '<b>' + esc(p.name) + '</b>' +
+            (p.role ? '<small class="tm-role">' + esc(p.role) + '</small>' : '') +
+            (p.city ? '<small class="tm-city">📍 ' + esc(p.city) + '</small>' : '') +
+            stars +
+            (Number(p.price) > 0 ? '<span class="tm-price">' + money(p.price, S.biz.currency) + (p.price_note ? ' · ' + esc(p.price_note) : '') + '</span>' : '') +
+          '</span>' +
+          '<span class="sq-arrow" aria-hidden="true">›</span>' +
+        '</button>';
+      }).join('') + '</div>';
+    }
+    return '<section class="cat-block" id="equipo"><div class="wrap">' + blockHead(sec) + body + '</div></section>';
+  }
+
+  // Pop-up de una tarjeta de Calidad o Equipamiento.
+  function openSectionItem(kind, i) {
+    var sec = CW.sections(S.biz)[kind];
+    var it = sec && sec.items[i]; if (!it) return;
+    var text = String(it.details || it.text || '').replace(/\n/g, '<br>');
+    var html = '<div class="sq-modal">' +
+      (it.image
+        ? '<div class="sq-modal-img"><img src="' + esc(it.image) + '" alt="' + esc(it.title) + '"></div>'
+        : '<div class="sq-modal-icon" aria-hidden="true">' + esc(it.icon || '•') + '</div>') +
+      (it.sub ? '<span class="sq-modal-sub">' + esc(it.sub) + '</span>' : '') +
+      '<p class="sq-modal-text">' + text + '</p>' +
+      '</div>';
+    CW.modal({
+      className: 'sq-modal-wrap',
+      title: it.title,
+      html: html,
+      footer: '<button class="btn ghost" data-close>' + t('common.close') + '</button>'
+    });
+  }
+
+  // Pop-up del profesional con toda su ficha.
+  function openPro(p) {
+    if (!p) return;
+    var tel = String(p.whatsapp || p.phone || '').replace(/[^\d]/g, '');
+    if (tel.length < 8) tel = ((CW.config && String(CW.config.supportWhatsapp || '').replace(/[^\d]/g, '')) || CONTACT.wa);
+    var cita = 'https://wa.me/' + tel + '?text=' + encodeURIComponent(t('team.bookMsg', { name: p.name }));
+    var rating = Number(p.rating) > 0 ? Number(p.rating) : 0;
+    var rows = [];
+    if (p.city) rows.push('<li><span>📍</span><b>' + esc(p.city) + '</b></li>');
+    if (Number(p.price) > 0) rows.push('<li><span>💶</span><b>' + money(p.price, S.biz.currency) + '</b>' + (p.price_note ? ' <small>' + esc(p.price_note) + '</small>' : '') + '</li>');
+    if (p.phone) rows.push('<li><span>📞</span><a href="tel:' + esc(p.phone) + '">' + esc(p.phone) + '</a></li>');
+    if (p.website) rows.push('<li><span>🌐</span><a href="' + esc(p.website) + '" target="_blank" rel="noopener">' + esc(p.website.replace(/^https?:\/\//, '')) + '</a></li>');
+
+    var html = '<div class="tm-modal">' +
+      '<div class="tm-modal-head">' +
+        '<span class="tm-photo tm-photo--big">' + (p.photo_url ? '<img src="' + esc(p.photo_url) + '" alt="">' : esc((p.name || '?').charAt(0).toUpperCase())) + '</span>' +
+        '<div><b>' + esc(p.name) + '</b>' +
+          (p.role ? '<small>' + esc(p.role) + '</small>' : '') +
+          (rating ? '<span class="tm-stars">' + new Array(Math.round(rating) + 1).join('★') + (p.reviews_count ? ' <small>(' + p.reviews_count + ')</small>' : '') + '</span>' : '') +
+        '</div>' +
+      '</div>' +
+      (p.bio ? '<p class="tm-bio">' + esc(p.bio).replace(/\n/g, '<br>') + '</p>' : '') +
+      (rows.length ? '<ul class="tm-rows">' + rows.join('') + '</ul>' : '') +
+      '<div class="tm-modal-actions">' +
+        '<a class="btn primary" href="' + cita + '" target="_blank" rel="noopener">📅 ' + t('team.book') + '</a>' +
+        (p.website ? '<a class="btn ghost" href="' + esc(p.website) + '" target="_blank" rel="noopener">🌐 ' + t('team.web') + '</a>' : '') +
+      '</div>' +
+      '</div>';
+    CW.modal({
+      className: 'tm-modal-wrap',
+      title: t('team.card'),
+      html: html,
+      footer: '<button class="btn ghost" data-close>' + t('common.close') + '</button>'
+    });
+  }
+
   // Reseñas de clientes (antes de contacto).
   function reviewsHTML() {
+    var sec = CW.sections(S.biz).reviews;
+    if (!sec || sec.enabled === false) return '';
     var wa = 'https://wa.me/' + CONTACT.wa + '?text=' + encodeURIComponent(t('rev.waMsg'));
+    var cards = sec.items.map(function (r, i) {
+      var stars = Math.max(1, Math.min(5, Number(r.stars) || 5));
+      var text = r.text || t('rev.' + (i + 1) + '.text');
+      return '<article class="rev-card">' +
+        '<div class="rev-stars" aria-label="' + stars + '/5">' + new Array(stars + 1).join('★') + '</div>' +
+        '<p>' + esc(text) + '</p>' +
+        '<footer><b>' + esc(r.name || '') + '</b><span>' + esc(r.city || '') + '</span></footer>' +
+      '</article>';
+    }).join('');
     return '<section class="cat-reviews" id="resenas"><div class="wrap">' +
       '<div class="rev-head">' +
-        '<span class="cc-kicker">' + t('rev.kicker') + '</span>' +
-        '<h2>' + t('rev.title') + '</h2>' +
-        '<p>' + t('rev.sub') + '</p>' +
+        '<span class="cc-kicker">' + esc(sec.kicker || t('rev.kicker')) + '</span>' +
+        '<h2>' + esc(sec.title || t('rev.title')) + '</h2>' +
+        '<p>' + esc(sec.sub || t('rev.sub')) + '</p>' +
       '</div>' +
-      '<div class="rev-grid">' + REVIEWS.map(function (r) {
-        return '<article class="rev-card">' +
-          '<div class="rev-stars" aria-label="' + r.stars + '/5">' + new Array(r.stars + 1).join('★') + '</div>' +
-          '<p>' + esc(t('rev.' + r.key + '.text')) + '</p>' +
-          '<footer><b>' + esc(r.name) + '</b><span>' + esc(r.city) + '</span></footer>' +
-        '</article>';
-      }).join('') + '</div>' +
+      '<div class="rev-grid">' + cards + '</div>' +
       '<a class="btn ghost rev-cta" href="' + wa + '" target="_blank" rel="noopener">💬 ' + t('rev.cta') + '</a>' +
     '</div></section>';
   }
@@ -209,6 +348,15 @@
         (hours ? '<li><i>🕒</i><div><b>' + t('cc.hours') + '</b><span>' + esc(hours) + '</span></div></li>' : '') +
       '</ul>' +
       '</div></section>';
+  }
+
+  // Nombre del negocio en dos colores: «Peintures» en azul y el resto
+  // («Arij Color») en naranja. Para otros nombres se muestra tal cual.
+  function brandNameHTML(biz) {
+    var name = CW.tx(biz, 'name') || '';
+    var m = name.match(/^(peintures)\s+(.+)$/i);
+    if (!m) return esc(name);
+    return '<span class="brand-blue">' + esc(m[1]) + '</span> <span class="brand-orange">' + esc(m[2]) + '</span>';
   }
 
   function hexSoft(hex) {
@@ -258,6 +406,12 @@
       '</select>' : '') +
       (cats.length ? '<select data-fcat aria-label="' + t('common.category') + '">' + catOpts + '</select>' : '') +
       (active ? '<button class="btn ghost small" data-fclear>' + t('cat.public.clear') + '</button>' : '') +
+      '</div>' +
+      '<div class="cat-quick">' +
+        '<a class="cat-quick-btn" href="' + esc(CW.url('porfolio.html') + '?b=' + encodeURIComponent((S.biz && S.biz.slug) || '')) + '">' +
+          '<i>📸</i><span><b>' + t('nav.portfolio.btn') + '</b><small>' + t('nav.portfolio.sub') + '</small></span></a>' +
+        '<a class="cat-quick-btn" href="#equipo">' +
+          '<i>👥</i><span><b>' + t('nav.team') + '</b><small>' + t('nav.team.sub') + '</small></span></a>' +
       '</div>';
   }
 
@@ -410,8 +564,9 @@
     var c = catOf(p.category_id);
     var imgs = (p.images && p.images.length) ? p.images : [null];
     var groups = p.kind === 'service' ? [] : optGroups(p);
+    var short = shortText(p);
     var m = CW.modal({
-      className: 'detail-modal',
+      className: 'detail-modal detail-modal--xl',
       title: CW.tx(p, 'name'),
       html:
         '<div class="detail-grid">' +
@@ -419,6 +574,7 @@
           (imgs.length > 1 ? '<div class="dg-thumbs">' + imgs.map(function (u, i) { return '<button data-dg="' + i + '" class="' + (i === 0 ? 'active' : '') + '">' + (u ? '<img src="' + esc(u) + '">' : '🖼️') + '</button>'; }).join('') + '</div>' : '') + '</div>' +
           '<div class="detail-info"><span class="detail-type">' + (p.kind === 'service' ? t('prod.type.service') : t('prod.type.product')) + (c ? ' · ' + esc(CW.tx(c, 'name')) : '') + '</span>' +
           '<h2>' + esc(CW.tx(p, 'name')) + '</h2>' +
+          (short ? '<p class="detail-short">' + esc(short) + '</p>' : '') +
           '<div class="detail-price">' + (Number(p.promo_price) > 0 && Number(p.promo_price) < Number(p.price) ?
             '<b>' + money(p.promo_price, S.biz.currency) + '</b> <s>' + money(p.price, S.biz.currency) + '</s> <span class="tag warn">-' + CW.api.pct(p.promo_price, p.price) + '%</span>' :
             (Number(p.price) > 0 ? '<b>' + money(p.price, S.biz.currency) + '</b>' : '<b>' + t('cat.public.consult') + '</b>')) + '</div>' +
@@ -435,6 +591,11 @@
               }).join('') + '</select></label>';
           }).join('') + '</div>' : '') +
           (CW.tx(p, 'description') ? '<p class="detail-desc">' + esc(CW.tx(p, 'description')).replace(/\n/g, '<br>') + '</p>' : '') +
+          '<div class="detail-docs">' +
+            '<a class="doc-btn" href="./assets/docs/ficha-tecnica.pdf" download="ficha-tecnica.pdf"><span>📄</span>' + t('doc.tech') + '</a>' +
+            '<a class="doc-btn" href="./assets/docs/guia-seleccion.pdf" download="guia-seleccion.pdf"><span>🎨</span>' + t('doc.guide') + '</a>' +
+            '<a class="doc-btn" href="./assets/docs/seguridad.pdf" download="seguridad.pdf"><span>🛡️</span>' + t('doc.safety') + '</a>' +
+          '</div>' +
           '<div class="detail-actions"><button class="btn primary" data-d-add="' + p.id + '">' + (p.kind === 'service' ? (p.bookable ? t('cat.public.book') : t('cat.public.request')) : t('cat.public.add')) + '</button>' +
           '<button class="btn ghost" data-d-share="' + p.id + '">↗ ' + t('common.share') + '</button></div></div>' +
         '</div>'

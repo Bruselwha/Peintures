@@ -32,10 +32,13 @@ assets/css/             styles, landing, catalog, portfolio, assistant
 assets/js/              config, i18n, panel-i18n, store, common, auth,
                         dashboard, catalog, portfolio, assistant, policies
 assets/demo/            Imágenes del catálogo de ejemplo
+assets/docs/            Ficha técnica, guía de selección y seguridad (PDF)
 supabase/schema.sql     Esquema COMPLETO para un proyecto nuevo
 supabase/*.sql          Migraciones incrementales (proyectos ya existentes)
                         · actualizacion-opciones-producto.sql (color, tamaño,
                           litros y peso de cada producto)
+                        · actualizacion-secciones-y-equipo.sql (secciones
+                          editables y ficha ampliada del equipo)
 ```
 
 ### Páginas y URLs

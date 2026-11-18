@@ -468,11 +468,84 @@
   CW.tx = CWU.tx;
   CW.demoCatalog = CWU.demoCatalog;
   CW.demoCatalogMerged = CWU.demoCatalogMerged;
+  CW.sections = mergeSections;
+
   CW.modal = CWU.modal;
   CW.confirm = CWU.confirm;
   CW.t = CWU.t;
   CW.api = CWU; // acceso completo
   CW.COUNTRY_CODES = COUNTRY_CODES;
+
+  // Contenido por defecto de las secciones del catálogo. Se puede cambiar desde el panel
+  // (Ajustes → Contenido del catálogo) y se guarda en businesses.sections.
+  var SECTION_DEFAULTS = {
+    quality: {
+      enabled: true,
+      kicker: 'QUALITÉ ET CONFIANCE',
+      title: 'Des solutions pour chaque projet',
+      sub: 'Des produits pour les particuliers, peintres professionnels, distributeurs et entreprises.',
+      items: [
+        { icon: '🏠', title: 'Décoration', text: 'Peintures pour rénover intérieurs et extérieurs.', image: '', details: '' },
+        { icon: '🛡️', title: 'Protection', text: 'Solutions contre l’humidité et pour les surfaces.', image: '', details: '' },
+        { icon: '💼', title: 'Professionnel', text: 'Des outils pour les travaux exigeants.', image: '', details: '' },
+        { icon: '🎨', title: 'Couleur', text: 'Une gamme de couleurs pour chaque espace.', image: '', details: '' }
+      ]
+    },
+    equipment: {
+      enabled: true,
+      kicker: 'ÉQUIPEMENT',
+      title: 'Accessoires de peinture',
+      sub: 'Tout le nécessaire pour préparer, appliquer et finir chaque travail.',
+      items: [
+        { icon: '🖌️', title: 'Brosses professionnelles', sub: 'ARIJ COLOR TOOLS', text: 'Brosses et pinceaux pour les angles, les finitions et les retouches.', image: '', details: '' },
+        { icon: '🧹', title: 'Rouleaux et manchons', sub: 'ARIJ COLOR TOOLS', text: 'Manchons de différentes fibres pour murs et plafonds, selon le rendu souhaité.', image: '', details: '' },
+        { icon: '🔺', title: 'Spatules et taloches', sub: 'ARIJ COLOR TOOLS', text: 'Pour reboucher, lisser et préparer les surfaces avant la peinture.', image: '', details: '' },
+        { icon: '⬜', title: 'Abrasifs et papiers', sub: 'ARIJ COLOR TOOLS', text: 'Papiers et abrasifs pour poncer et obtenir une surface régulière.', image: '', details: '' },
+        { icon: '🎗️', title: 'Rubans de masquage', sub: 'ARIJ COLOR TOOLS', text: 'Rubans qui protègent les plinthes, vitres et contours pendant les travaux.', image: '', details: '' },
+        { icon: '🪣', title: 'Seaux et bacs', sub: 'ARIJ COLOR TOOLS', text: 'Seaux, bacs et grilles pour préparer, mélanger et charger les outils.', image: '', details: '' },
+        { icon: '🛡️', title: 'Bâches de protection', sub: 'ARIJ COLOR TOOLS', text: 'Bâches et films pour protéger le sol et le mobilier.', image: '', details: '' },
+        { icon: '⚙️', title: 'Pistolets et machines', sub: 'ARIJ COLOR TOOLS', text: 'Pistolets et machines pour les grandes surfaces et les finitions régulières.', image: '', details: '' }
+      ]
+    },
+    reviews: {
+      // Vacío = se usa el texto traducido de i18n (rev.kicker/title/sub).
+      enabled: true,
+      kicker: '',
+      title: '',
+      sub: '',
+      items: [
+        { name: 'Salma B.', city: 'Casablanca', stars: 5, text: '' },
+        { name: 'Youssef K.', city: 'Rabat', stars: 5, text: '' },
+        { name: 'Nadia E.', city: 'Casablanca', stars: 5, text: '' }
+      ]
+    },
+    team: {
+      enabled: true,
+      kicker: 'ÉQUIPE',
+      title: 'Nos professionnels',
+      sub: 'Une équipe qualifiée pour vous conseiller et réaliser vos travaux.'
+    }
+  };
+
+  // Mezcla lo guardado en el panel con los valores por defecto (los campos
+  // que falten usan el original).
+  function mergeSections(biz) {
+    var saved = (biz && biz.sections) || {};
+    function merge(key) {
+      var def = SECTION_DEFAULTS[key];
+      var cur = saved[key] || {};
+      var out = {};
+      Object.keys(def).forEach(function (k) { out[k] = (cur[k] === undefined || cur[k] === null) ? def[k] : cur[k]; });
+      out.items = (def.items || []).map(function (item, i) {
+        var got = (cur.items && cur.items[i]) || {};
+        var merged = {};
+        Object.keys(item).forEach(function (k) { merged[k] = got[k] === undefined ? item[k] : got[k]; });
+        return merged;
+      });
+      return out;
+    }
+    return { quality: merge('quality'), equipment: merge('equipment'), reviews: merge('reviews'), team: merge('team') };
+  }
 
   // Aplica i18n al cargar y en cada cambio de idioma.
   document.addEventListener('DOMContentLoaded', function () {

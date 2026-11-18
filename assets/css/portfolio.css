@@ -5,7 +5,19 @@
 
 .portfolio-page { background: var(--bg); }
 
-.pf-hero { background: var(--brand); color: #fff; padding: clamp(28px, 6vw, 64px) 0; }
+.pf-hero { background: var(--brand); color: #fff; padding: clamp(28px, 6vw, 64px) 0; position: relative; overflow: hidden; }
+/* Cabecera con imagen del negocio */
+.pf-hero.has-img {
+  background-size: cover; background-position: center;
+  min-height: clamp(240px, 34vw, 380px);
+  display: flex; align-items: flex-end;
+}
+.pf-hero.has-img::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(12, 8, 24, .25), rgba(12, 8, 24, .72));
+}
+.pf-hero.has-img .wrap { position: relative; z-index: 1; padding-block: 26px; }
+.pf-hero.has-img .pf-back { background: rgba(255,255,255,.16); }
 .portfolio-page .pf-hero { background: linear-gradient(135deg, var(--brand), color-mix(in srgb, var(--brand) 70%, #000)); }
 .pf-hero h1 { margin: 6px 0 8px; font-size: clamp(1.6rem, 4.4vw, 2.4rem); line-height: 1.15; }
 .pf-hero p { margin: 0; opacity: .9; max-width: 60ch; }
@@ -38,7 +50,7 @@
 }
 
 /* Pop-up de un trabajo */
-.pf-modal { max-width: 860px; }
+.pf-modal { max-width: 1050px; }
 .pf-modal-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 20px; align-items: start; }
 .pf-modal-media { background: #f2eef7; border-radius: 14px; overflow: hidden; display: grid; place-items: center; }
 .pf-modal-media img { width: 100%; height: auto; max-height: 60vh; object-fit: contain; display: block; }

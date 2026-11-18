@@ -65,6 +65,7 @@ create table if not exists public.businesses (
   work_days       jsonb not null default '[1,2,3,4,5,6]'::jsonb,
   onboarded       boolean not null default false,
   i18n            jsonb not null default '{}'::jsonb,
+  sections        jsonb not null default '{}'::jsonb,  -- secciones editables del catálogo
   created_at      timestamptz not null default now()
 );
 create index if not exists businesses_owner_idx on public.businesses (owner_id);
@@ -120,6 +121,17 @@ create table if not exists public.professionals (
   open_time    text not null default '09:00',
   close_time   text not null default '18:00',
   slot_minutes integer not null default 30,
+  photo_url    text not null default '',
+  bio          text not null default '',
+  website      text not null default '',
+  phone        text not null default '',
+  whatsapp     text not null default '',
+  city         text not null default '',
+  rating       numeric(3,2),
+  reviews_count integer not null default 0,
+  price        numeric(12,2),
+  price_note   text not null default '',
+  sort_order   integer not null default 0,
   created_at   timestamptz not null default now()
 );
 create index if not exists professionals_business_idx on public.professionals (business_id);

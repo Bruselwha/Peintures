@@ -1,3 +1,97 @@
+# v29 · Ficha amplia, secciones editables, equipo y accesorios
+
+## 1. Ficha de producto (70 % de la pantalla)
+
+- El pop-up de la tarjeta ocupa ahora **70 % de ancho y hasta 70 % de alto**
+  (en móvil, pantalla completa).
+- Contenido: imagen grande (completa, sin recortes), título, **descripción
+  corta**, **descripción larga**, datos, **selector de color / tamaño / litros /
+  peso** y tres descargas en PDF.
+- Botones **📄 Ficha técnica · 🎨 Guía de selección · 🛡️ Seguridad**, servidos
+  desde `assets/docs/*.pdf` con `download`.
+- El resto de pop-ups de la web pasan de 680 a **900 px** de ancho; el del
+  porfolio a **1050 px**.
+
+## 2. Imagen de cabecera en el porfolio
+
+La cabecera usa la **imagen principal del negocio** (`hero_image`, la misma del
+catálogo) con degradado para que el texto se lea, y las URL de vuelta al
+catálogo/WhatsApp se mantienen.
+
+## 3. Secciones nuevas antes de las reseñas
+
+**QUALITÉ ET CONFIANCE** y **ÉQUIPEMENT** con el texto de las capturas:
+
+- Calidad: 4 tarjetas (Décoration, Protection, Professionnel, Couleur).
+- Equipamiento: 8 accesorios en dos columnas
+  (Brosses, Rouleaux et manchons, Spatules et taloches, Abrasifs et papiers,
+  Rubans de masquage, Seaux et bacs, Bâches de protection, Pistolets et machines)
+  con el subtítulo **ARIJ COLOR TOOLS**.
+- **Cada tarjeta abre su pop-up** con imagen (si la tiene), subtítulo y texto
+  largo.
+- Todo es **editable desde el panel**: Ajustes → **Contenido del catálogo**
+  (interruptor por sección, antetítulo, título, subtítulo y cada tarjeta con
+  icono, título, texto, más información e imagen de biblioteca o URL).
+- Las **reseñas** también son editables (nombre, ciudad, estrellas y texto) y la
+  cabecera de **Equipo** (kicker, título, subtítulo).
+
+## 4. Marca en dos colores
+
+El nombre junto al logo se pinta **«Peintures» en azul (#2F68BB)** y
+**«Arij Color» en naranja (#F97316)**, en el catálogo y en el porfolio.
+
+## 5. Equipo con ficha completa
+
+- **Panel → Equipo**: la ficha incorpora **foto** (biblioteca o URL),
+  **biografía**, **web o enlace**, **teléfono**, **WhatsApp**, **ciudad**,
+  **valoración** y **nº de reseñas**, **precio del servicio** y **nota del
+  precio**, además del horario que ya existía.
+- **Catálogo**: sección **#equipo** con tarjetas (foto, nombre, rol, ciudad,
+  estrellas, precio) y un pop-up con toda la información y botón
+  **📅 Pedir cita por WhatsApp**.
+
+## 6. Botones Portfolio y Equipo
+
+Junto a «Todas las categorías» aparecen dos botones con subtítulo:
+**📸 Portfolio (Nuestros trabajos)** → porfolio del negocio y
+**👥 Equipo (Profesionales)** → sección `#equipo`. En móvil, en dos columnas
+dentro del menú.
+
+## 7. Textos de ejemplo de los campos
+
+Los placeholders del panel se han cambiado por ejemplos de pintura
+(«Peinture mate blanc cassé 20 L», «Acrílico mate lavable, 20 L», «Rénovation
+salon 80 m²», «Applicateur / Coloriste», «La bonne peinture pour chaque
+projet»…), incluido el del nombre del negocio en el registro.
+
+## SQL
+
+    supabase/actualizacion-secciones-y-equipo.sql   (nuevo, idempotente)
+
+Añade `businesses.sections` y los campos nuevos de `professionals`.
+
+## Caché
+
+`CACHE_VERSION` → `arij-v5`; `styles.css` 21, `catalog.css` 14,
+`portfolio.css` 3, `i18n.js` 25, `common.js` 15, `catalog.js` 21,
+`dashboard.js` 22, `portfolio.js` 5.
+
+## Verificación
+
+- **22 pruebas jsdom** del catálogo y el porfolio: marca en dos colores,
+  secciones y orden, 4 tarjetas de Calidad, 8 accesorios, pop-ups de accesorio y
+  de profesional (con cita por WhatsApp), ficha amplia con descripciones,
+  selectores y 3 PDF (existen), botones Portfolio/Equipo e imagen de cabecera
+  del porfolio.
+- **21 pruebas jsdom del panel**: editor de secciones (92 campos, guardado de
+  título, detalle, imagen e interruptor), formulario de equipo completo
+  (foto, bio, web, teléfono, WhatsApp, ciudad, valoración, reseñas, precio) y
+  placeholders nuevos.
+- Todas correctas. Comprobadas además todas las claves de traducción en
+  español, francés y árabe (0 faltantes).
+
+---
+
 # v28 · Menú, contacto, reseñas, asistente completo y opciones de producto
 
 ## 1. Cambio de idioma en la app instalada

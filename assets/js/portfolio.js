@@ -47,6 +47,14 @@
     });
   }
 
+  // «Peintures» en azul y «Arij Color» en naranja, igual que en el catálogo.
+  function brandNameHTML(biz) {
+    var name = CW.tx(biz, 'name') || '';
+    var m = name.match(/^(peintures)\s+(.+)$/i);
+    if (!m) return esc(name);
+    return '<span class="brand-blue">' + esc(m[1]) + '</span> <span class="brand-orange">' + esc(m[2]) + '</span>';
+  }
+
   function render() {
     var root = $('[data-pf-root]');
     if (!S.biz) {
@@ -63,7 +71,7 @@
     // Cabecera con la marca del negocio
     $('[data-pf-brand]').innerHTML =
       (b.logo_url ? '<img src="' + esc(b.logo_url) + '" alt="" class="cat-logo">' : '<span class="cat-logo ph" style="background:' + esc(b.brand_color || '#5B1A80') + '">' + esc((b.name || 'M').charAt(0)) + '</span>') +
-      '<div><b>' + esc(CW.tx(b, 'name')) + '</b><small>' + t('port.title') + '</small></div>';
+      '<div><b>' + brandNameHTML(b) + '</b><small>' + t('port.title') + '</small></div>';
 
     var back = $('[data-pf-back]');
     if (back) back.href = CW.url('catalogo.html') + '?b=' + encodeURIComponent(b.slug || '');
@@ -88,8 +96,10 @@
         '</div></article>';
     }).join('');
 
+    var heroImg = b.hero_image || b.seo_image || '';
     root.innerHTML =
-      '<section class="pf-hero"><div class="wrap">' +
+      '<section class="pf-hero' + (heroImg ? ' has-img' : '') + '"' +
+        (heroImg ? ' style="background-image:url(' + esc(heroImg) + ')"' : '') + '><div class="wrap">' +
         '<span class="pf-kicker">' + esc(CW.tx(b, 'name')) + '</span>' +
         '<h1>' + t('port.title') + '</h1>' +
         '<p>' + esc(S.items.length ? t('port.sub') : t('port.empty.desc')) + '</p>' +
