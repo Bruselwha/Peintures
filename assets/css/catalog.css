@@ -354,7 +354,7 @@
    ========================================================================== */
 .cat-block { padding: clamp(34px, 5vw, 58px) 0; background: #fff; }
 .cat-block--soft { background: #faf9fc; }
-.cat-block-head { max-width: 780px; margin-bottom: 24px; }
+.cat-block-head { max-width: 780px; margin-bottom: 20px; }
 .cat-block-kicker {
   display: block; font-size: .74rem; font-weight: 800; letter-spacing: .15em;
   text-transform: uppercase; color: #E3A008;
