@@ -2,7 +2,7 @@
   "name": "Peintures Arij Color",
   "short_name": "Arij Color",
   "description": "Catálogos online con pedidos por WhatsApp.",
-  "start_url": "./",
+  "start_url": "./catalogo?b=peintures",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f7f7fb",

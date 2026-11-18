@@ -1,29 +1,29 @@
 /* Arij Color · Service Worker
    Versión de caché única; solo se consulta la caché actual para no servir
    archivos antiguos. HTML network-first, estáticos cache-first. */
-const CACHE_VERSION = 'arij-v6';
+const CACHE_VERSION = 'arij-v7';
 const CACHE_NAME = 'arijcolor-' + CACHE_VERSION;
 
 const PRECACHE = [
-  './',
   './index.html',
   './login.html',
   './dashboard.html',
   './catalogo.html',
+  './catalogo?b=peintures',
   './porfolio.html',
-  './assets/css/portfolio.css?v=4',
+  './assets/css/portfolio.css?v=5',
   './assets/js/portfolio.js?v=6',
   './manifest.webmanifest',
-  './assets/css/styles.css?v=22',
+  './assets/css/styles.css?v=23',
   './assets/css/home.css?v=11',
   './assets/css/landing.css?v=9',
-  './assets/css/catalog.css?v=15',
+  './assets/css/catalog.css?v=16',
   './assets/css/assistant.css?v=7',
   './assets/js/config.js?v=11',
   './assets/js/i18n.js?v=26',
   './assets/js/store.js?v=13',
   './assets/js/panel-i18n.js?v=4',
-  './assets/js/common.js?v=16',
+  './assets/js/common.js?v=17',
   './assets/js/policies.js?v=7',
   './assets/js/landing.js?v=2',
   './assets/js/auth.js?v=10',
@@ -53,13 +53,20 @@ self.addEventListener('fetch', (e) => {
   const isHTML = req.headers.get('accept')?.includes('text/html');
 
   if (isHTML) {
-    // network-first
+    // network-first. Si no hay red, se sirve lo cacheado y, como último
+    // recurso, el catálogo (nunca index.html: es una página que redirige y
+    // podría provocar un bucle en la app instalada).
     e.respondWith(
       fetch(req).then((res) => {
-        const copy = res.clone();
-        caches.open(CACHE_NAME).then((c) => c.put(req, copy)).catch(() => {});
+        if (res && res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then((c) => c.put(req, copy)).catch(() => {});
+        }
         return res;
-      }).catch(() => caches.open(CACHE_NAME).then((c) => c.match(req)).then((r) => r || caches.match('./index.html')))
+      }).catch(() => caches.open(CACHE_NAME).then((c) =>
+        c.match(req)
+          .then((r) => r || c.match('./catalogo?b=peintures') || c.match('./catalogo.html'))
+      ))
     );
     return;
   }

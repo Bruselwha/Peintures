@@ -341,7 +341,9 @@
       var ua = navigator.userAgent || '';
       var isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
       var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua) || window.matchMedia('(max-width: 900px)').matches;
-      var installed = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+      var installed = ['standalone', 'fullscreen', 'minimal-ui'].some(function (m) {
+        try { return window.matchMedia('(display-mode: ' + m + ')').matches; } catch (e) { return false; }
+      }) || window.navigator.standalone === true;
 
       function dismissed() { try { return !!localStorage.getItem('cw_pwa_dismissed'); } catch (e) { return false; } }
       function dismiss() { try { localStorage.setItem('cw_pwa_dismissed', '1'); } catch (e) {} }

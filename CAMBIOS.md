@@ -1,3 +1,60 @@
+# v31 · Tamaño de pop-ups y arreglo del arranque en la app instalada
+
+## 1. Pop-ups
+
+- **Escritorio:** ficha de producto, Calidad, Equipamiento, profesional y
+  porfolio al **75 % de ancho y 72 % de alto** (antes 94/92 %).
+- **Móvil:** como antes. La ficha ocupa el ancho completo con altura máxima del
+  92 % y se abre como hoja inferior; la **imagen queda arriba** (galería primero)
+  y el texto debajo, a una sola columna.
+- El resto de pop-ups en móvil vuelven al ancho completo (sin el 94 %).
+
+## 2. La app instalada se quedaba congelada al abrir
+
+La causa era un **bucle de redirección** cuando la app se abría sin conexión (o
+con la red fallando): el service worker no encontraba la página y devolvía
+`index.html`, que redirige al catálogo; esa navegación también fallaba y volvía
+a entregar `index.html`… la app se quedaba bloqueada.
+
+Arreglos:
+
+- **`manifest`**: `start_url` pasa a ser **`./catalogo?b=peintures`**. La app
+  instalada abre el catálogo directamente, sin pasar por la raíz.
+- **`vercel.json`**: se elimina la redirección de servidor de `/` a
+  `/catalogo`; la home se resuelve en el navegador.
+- **`index.html`**: redirección **relativa**, con una guarda en
+  `sessionStorage` para no repetirla, y sin redirigir si no hay conexión.
+- **`sw.js`** (`arij-v7`):
+  - Ya no precachea `./` (la raíz) y sí `./catalogo?b=peintures`.
+  - Si falla la red, **nunca** devuelve `index.html`: sirve lo cacheado de esa
+    URL o el catálogo.
+  - Solo guarda en caché respuestas correctas (`res.ok`).
+- **Aviso de reintento** en el catálogo: si a los 12 s sigue en «Cargando…»,
+  muestra «No se pudo cargar el catálogo» con botón **Reintentar**, en lugar de
+  quedarse en blanco.
+- Detección de app instalada ampliada (`standalone`, `fullscreen`, `minimal-ui`
+  y `navigator.standalone`) para que el aviso de instalación no aparezca dentro
+  de la app.
+
+> Tras desplegar, cierra la app del todo y ábrela otra vez (una o dos veces) para
+> que el service worker nuevo (`arij-v7`) sustituya al anterior.
+
+## Caché
+
+`CACHE_VERSION` → `arij-v7`; `styles.css` 23, `catalog.css` 16,
+`portfolio.css` 5, `common.js` 17.
+
+## Verificación
+
+- **33 pruebas jsdom**: medidas 75/72 en escritorio y ancho completo en móvil
+  con la imagen arriba, pop-ups del porfolio, y las comprobaciones del arranque
+  de la app (`start_url` al catálogo, sin redirección de servidor, service worker
+  sin `index.html` ni `./` en el precache, aviso de reintento).
+- El resto de suites (panel, v29, v28, catálogo, instalación PWA) siguen en
+  verde.
+
+---
+
 # v30 · Cabecera, hamburguesa del porfolio, equipo, pop-ups y FAQ
 
 ## 1. Cabecera del catálogo

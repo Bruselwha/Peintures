@@ -7,10 +7,18 @@
 <meta name="description" content="Créez votre catalogue en ligne, recevez les commandes par WhatsApp, gérez vos réservations et montrez votre portfolio. Sans commission, en 3 langues.">
 <meta name="theme-color" content="#6b21a8">
 <script>
-  /* La home no es una página propia: entra siempre al catálogo del negocio. */
+  /* La home no es una página propia: entra al catálogo del negocio.
+     Se hace en el navegador (sin redirección de servidor) y con una guarda
+     para que la app instalada nunca se quede en un bucle de recarga. */
   (function () {
     var path = location.pathname.replace(/index\.html?$/i, '').replace(/\/+$/, '');
-    if (path === '') location.replace('https://peintures.arijcolor.com/catalogo?b=peintures');
+    if (path !== '') return;
+    try {
+      if (sessionStorage.getItem('cw_home_redirect') === '1') return;
+      sessionStorage.setItem('cw_home_redirect', '1');
+    } catch (e) {}
+    if (navigator.onLine === false) return;
+    location.replace('./catalogo?b=peintures');
   })();
 </script>
 <link rel="canonical" href="https://peintures.arijcolor.com/">
@@ -28,7 +36,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="assets/css/styles.css?v=22">
+<link rel="stylesheet" href="assets/css/styles.css?v=23">
 <link rel="stylesheet" href="assets/css/home.css?v=11">
 
 <script>try{ if(!localStorage.getItem('cw_lang')) localStorage.setItem('cw_lang','fr'); }catch(e){}</script>
@@ -416,7 +424,7 @@
 <script defer src="assets/js/config.js?v=11"></script>
 <script defer src="assets/js/i18n.js?v=26"></script>
 <script defer src="assets/js/store.js?v=13"></script>
-<script defer src="assets/js/common.js?v=16"></script>
+<script defer src="assets/js/common.js?v=17"></script>
 <script defer src="assets/js/policies.js?v=7"></script>
 <script defer src="assets/js/landing.js?v=2"></script>
 <script>

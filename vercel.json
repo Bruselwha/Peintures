@@ -1,9 +1,6 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
-  "redirects": [
-    { "source": "/", "destination": "/catalogo?b=peintures", "permanent": false }
-  ],
   "headers": [
     {
       "source": "/sw.js",
