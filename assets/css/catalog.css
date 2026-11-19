@@ -341,7 +341,7 @@
    todo pasa al menú de la hamburguesa. */
 @media (max-width: 1320px) {
   .cat-quick-btn small { display: none; }
-  .cat-quick-btn { height: 42px; }
+  .cat-quick-btn { height: 38px; }
 }
 @media (max-width: 1100px) {
   .cat-quick { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
