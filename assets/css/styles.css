@@ -1018,3 +1018,16 @@ input.invalid, textarea.invalid, select.invalid { border-color: var(--bad) !impo
   margin-top: 10px; width: 100%; justify-content: center;
   border-style: dashed; color: var(--brand);
 }
+/* ==== MÓVIL: desplegable de banderas corto ==== */
+@media (max-width: 720px) {
+  .lang-switch,
+  .lang-dd {
+    width: auto !important;
+    flex: 0 0 auto !important;
+    max-width: 170px;
+  }
+  .lang-dd-btn {
+    width: auto !important;
+    justify-content: flex-start;
+  }
+}
