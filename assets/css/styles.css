@@ -1019,22 +1019,3 @@ input.invalid, textarea.invalid, select.invalid { border-color: var(--bad) !impo
   border-style: dashed; color: var(--brand);
 }
   
-/* ==== Título junto al logo: más grande ==== */
-header a:has(img, svg) :is(b, strong, h1),
-header > :first-child:has(img, svg) :is(b, strong, h1),
-header a:has(img, svg) > span,
-header > :first-child:has(img, svg) > span,
-header .brand :is(b, strong, h1),
-header .brand-name,
-header .brand-title,
-header .head-title {
-  font-size: 1.5rem !important;   /* ≈ 24px (ahora está en ~14px) */
-  line-height: 1.2 !important;
-}
-
-/* Subtítulo "Vente de Peintures au Maroc" acompasado */
-header a:has(img, svg) small,
-header > :first-child:has(img, svg) small,
-header .brand small {
-  font-size: .85rem !important;   /* ≈ 13.6px */
-}
