@@ -1041,23 +1041,3 @@ input.invalid, textarea.invalid, select.invalid { border-color: var(--bad) !impo
   object-fit: contain !important;
   margin: 0 auto;
 }
-
-/* ==== Menú inferior: se esconde al bajar, aparece al subir ==== */
-.bn-autohide {
-  transition: transform .32s cubic-bezier(.22, .61, .36, 1),
-              opacity .22s ease,
-              visibility 0s linear 0s;
-  will-change: transform;
-}
-.bn-autohide.bn-hidden {
-  transform: translateY(calc(100% + env(safe-area-inset-bottom, 0px) + 14px));
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: transform .32s cubic-bezier(.22, .61, .36, 1),
-              opacity .22s ease,
-              visibility 0s linear .32s;
-}
-@media (prefers-reduced-motion: reduce) {
-  .bn-autohide, .bn-autohide.bn-hidden { transition-duration: .01s, .01s, 0s; }
-}
