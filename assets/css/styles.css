@@ -1018,9 +1018,3 @@ input.invalid, textarea.invalid, select.invalid { border-color: var(--bad) !impo
   margin-top: 10px; width: 100%; justify-content: center;
   border-style: dashed; color: var(--brand);
 }
-@media (max-width: 720px) {
-  .cat-quick-btn[href="#equipo"] { display: none; }
-}
-@media (max-width: 720px) {
-  .cat-quick-btn[href="#portfolio"] { display: none; }
-}
