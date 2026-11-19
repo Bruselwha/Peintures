@@ -1031,3 +1031,18 @@ input.invalid, textarea.invalid, select.invalid { border-color: var(--bad) !impo
     justify-content: flex-start;
   }
 }
+/* ==== MÓVIL: quitar duplicado y fila de categorías sin cortes ==== */
+@media (max-width: 720px) {
+
+  /* 1) Fuera el Porfolio duplicado del encabezado (la tarjeta de arriba se queda) */
+  .head-actions a[href*="porfolio"] { display: none; }
+
+  /* 2) Fila de botones del encabezado bien repartida (WhatsApp ya no se queda colgado) */
+  .head-actions { flex-wrap: wrap; gap: 8px; }
+
+  /* 3) Fila de categorías: el ≡ fijo y las tarjetas se encogen para caber sin cortarse */
+  .cat-burger { flex: 0 0 auto; width: 56px; }
+  .cat-quick-btn { flex: 1 1 40%; min-width: 0; }
+  .cat-quick-btn b,
+  .cat-quick-btn small { overflow: hidden; text-overflow: ellipsis; }
+}
