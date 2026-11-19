@@ -341,11 +341,11 @@
    todo pasa al menú de la hamburguesa. */
 @media (max-width: 1320px) {
   .cat-quick-btn small { display: none; }
-  .cat-quick-btn { height: 36px; }
+  .cat-quick-btn { height: 42px; }
 }
 @media (max-width: 1100px) {
   .cat-quick { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
-  .cat-quick-btn { justify-content: flex-start; padding: 6px 10px; height: auto; }
+  .cat-quick-btn { justify-content: flex-start; padding: 10px 12px; height: auto; }
   .cat-quick-btn small { display: block; }
 }
 
