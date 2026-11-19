@@ -1019,25 +1019,25 @@ input.invalid, textarea.invalid, select.invalid { border-color: var(--bad) !impo
   border-style: dashed; color: var(--brand);
 }
   
-/* ==== Popup de producto: imagen completa y centrada (móvil) ==== */
-@media (max-width: 720px) {
-  .detail-modal--xl .detail-gallery,
-  .detail-modal--xl .dg-main {
-    height: auto !important;
-    max-height: none !important;
-    aspect-ratio: auto !important;
-    overflow: visible !important;
-  }
-  .detail-modal--xl .dg-main {
-    display: grid !important;
-    place-items: center !important;
-  }
-  .detail-modal--xl .dg-main img {
-    width: auto !important;
-    height: auto !important;
-    max-width: 100% !important;
-    max-height: 42vh !important;
-    object-fit: contain !important;
-    margin: 0 auto;
-  }
+/* ==== Escenario de producto profesional en el popup ==== */
+.detail-modal--xl .dg-main {
+  background: #ffffff !important;      /* mismo blanco que la foto: adiós franjas */
+  border: 1px solid #ecebf3;           /* borde fino que define el escenario */
+  border-radius: 18px;                 /* esquinas suaves, acabado de ficha premium */
+  padding: 16px;                       /* aire para que el producto no toque los bordes */
+  box-shadow: 0 12px 28px -20px rgba(23, 15, 60, .28);  /* profundidad sutil */
+  display: grid !important;
+  place-items: center !important;
+  aspect-ratio: auto !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: hidden;
+}
+.detail-modal--xl .dg-main img {
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-height: min(46vh, 420px) !important;  /* entera y centrada, con tope elegante */
+  object-fit: contain !important;
+  margin: 0 auto;
 }
