@@ -502,9 +502,32 @@
   .detail-docs { gap: 6px; }
   .doc-btn { flex: 1 1 46%; justify-content: center; font-size: .78rem; padding: 9px 8px; }
 }
-/* Tarjetas rápidas compactas y sin cortarse en móvil */
+/* ==== MÓVIL: fila de tarjetas rápidas sin cortes ni colapsos ==== */
 @media (max-width: 720px) {
-  .cat-quick-btn { flex: 1 1 0; min-width: 0; height: auto; padding: 8px 10px; }
+
+  /* La fila que contiene las tarjetas: en vez de cinta deslizable, que haga saltos de línea */
+  *:has(> .cat-quick-btn) {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-x: visible;
+    gap: 8px;
+  }
+
+  /* El desplegable de categorías (≡ ⌄): pasa a su propia línea, a lo ancho */
+  *:has(> .cat-quick-btn) > *:not(.cat-quick-btn) {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  /* Portfolio y Equipo: lado a lado, mitad y mitad, sin salirse de la pantalla */
+  .cat-quick-btn {
+    flex: 1 1 45%;
+    min-width: 45%;
+    height: auto;
+    padding: 8px 10px;
+  }
+
+  /* Textos un poco más pequeños y con "…" si no caben */
   .cat-quick-btn b { font-size: .78rem; overflow: hidden; text-overflow: ellipsis; }
   .cat-quick-btn small { font-size: .6rem; overflow: hidden; text-overflow: ellipsis; }
 }
