@@ -502,3 +502,17 @@
   .detail-docs { gap: 6px; }
   .doc-btn { flex: 1 1 46%; justify-content: center; font-size: .78rem; padding: 9px 8px; }
 }
+/* ==== MÓVIL: acortar el desplegable de banderas ==== */
+@media (max-width: 720px) {
+
+  /* Intento 1: si el selector es un <select> nativo con opciones de idioma */
+  select:has(option[value="es"]) {
+    max-width: 160px;
+    width: auto;
+  }
+
+  /* Intento 2: si es la tarjeta que va justo después de la fila Portfolio/Equipo */
+  *:has(> .cat-quick-btn) + * {
+    max-width: 160px;
+  }
+}
