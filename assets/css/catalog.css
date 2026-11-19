@@ -503,29 +503,9 @@
   .doc-btn { flex: 1 1 46%; justify-content: center; font-size: .78rem; padding: 9px 8px; }
 }
 
-/* Botones Portfolio y Equipo más pequeños en móvil */
+/* Ocultar Portfolio y Equipo únicamente en móvil */
 @media (max-width: 720px) {
   .cat-quick {
-    gap: 6px;
-  }
-
-  .cat-quick-btn {
-    min-width: 0;
-    height: 36px;
-    padding: 5px 8px;
-    gap: 6px;
-    border-radius: 10px;
-  }
-
-  .cat-quick-btn i {
-    font-size: .9rem;
-  }
-
-  .cat-quick-btn b {
-    font-size: .72rem;
-  }
-
-  .cat-quick-btn small {
-    font-size: .55rem;
+    display: none !important;
   }
 }
