@@ -1022,5 +1022,5 @@ input.invalid, textarea.invalid, select.invalid { border-color: var(--bad) !impo
   .cat-quick-btn[href="#equipo"] { display: none; }
 }
 @media (max-width: 720px) {
-  .cat-quick-btn[href="#Portfolio"] { display: none; }
+  .cat-quick-btn[href="#portfolio"] { display: none; }
 }
