@@ -1028,7 +1028,7 @@ header .brand :is(b, strong, h1),
 header .brand-name,
 header .brand-title,
 header .head-title {
-  font-size: 1.5rem !important;   /* ≈ 24px (ahora está en ~17px) */
+  font-size: 1.5rem !important;   /* ≈ 24px (ahora está en ~14px) */
   line-height: 1.2 !important;
 }
 
