@@ -1019,15 +1019,3 @@ input.invalid, textarea.invalid, select.invalid { border-color: var(--bad) !impo
   border-style: dashed; color: var(--brand);
 }
   
-/* ==== SOLO el título junto al logo: más grande ==== */
-header a:has(img, svg) :is(b, strong, h1),
-header > :first-child:has(img, svg) :is(b, strong, h1),
-header a:has(img, svg) > span:not(:has(small)),
-header > :first-child:has(img, svg) > span:not(:has(small)),
-header .brand :is(b, strong, h1),
-header .brand-name,
-header .brand-title,
-header .head-title {
-  font-size: 1.5rem !important;   /* ≈ 24px · súbelo a 1.7rem o bájalo a 1.3rem a tu gusto */
-  line-height: 1.2 !important;
-}
