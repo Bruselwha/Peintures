@@ -502,3 +502,9 @@
   .detail-docs { gap: 6px; }
   .doc-btn { flex: 1 1 46%; justify-content: center; font-size: .78rem; padding: 9px 8px; }
 }
+/* Tarjetas rápidas compactas y sin cortarse en móvil */
+@media (max-width: 720px) {
+  .cat-quick-btn { flex: 1 1 0; min-width: 0; height: auto; padding: 8px 10px; }
+  .cat-quick-btn b { font-size: .78rem; overflow: hidden; text-overflow: ellipsis; }
+  .cat-quick-btn small { font-size: .6rem; overflow: hidden; text-overflow: ellipsis; }
+}
