@@ -503,9 +503,9 @@
   .doc-btn { flex: 1 1 46%; justify-content: center; font-size: .78rem; padding: 9px 8px; }
 }
 
-/* Ocultar Portfolio y Equipo únicamente en móvil */
+/* Ocultar Portfolio y mantener Equipo en móvil */
 @media (max-width: 720px) {
-  .cat-quick {
+  .cat-quick-btn:first-child {
     display: none !important;
   }
 }
