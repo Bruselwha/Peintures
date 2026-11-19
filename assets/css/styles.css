@@ -1018,6 +1018,4 @@ input.invalid, textarea.invalid, select.invalid { border-color: var(--bad) !impo
   margin-top: 10px; width: 100%; justify-content: center;
   border-style: dashed; color: var(--brand);
 }
-@media (max-width: 720px) {
-  .cat-quick-btn { display: none; }
-}
+.cat-quick-btn { display: none; }
