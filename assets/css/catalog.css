@@ -516,3 +516,11 @@
     max-width: 160px;
   }
 }
+@media (max-width: 720px) {
+  select:has(option[value="es"]),
+  *:has(> .cat-quick-btn) + *,
+  *:has(> .cat-quick-btn) + * > * {
+    width: auto !important;
+    max-width: 160px !important;
+  }
+}
