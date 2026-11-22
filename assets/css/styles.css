@@ -1041,3 +1041,29 @@ input.invalid, textarea.invalid, select.invalid { border-color: var(--bad) !impo
   object-fit: contain !important;
   margin: 0 auto;
 }
+
+/* ==== Imagen de la tarjeta del catálogo general: un poco más pequeña ==== */
+/* (El popup NO se toca: vive fuera de <main>, así que queda excluido) */
+main [class*="card"] > [class*="img"],
+main [class*="card"] > [class*="thumb"],
+main [class*="card"] > [class*="media"],
+main [class*="card"] > [class*="photo"]:not(.tm-photo),
+main .ph-img:not(.big) {
+  aspect-ratio: 4 / 3 !important;
+  max-height: 170px !important;
+  height: auto !important;
+  display: grid !important;
+  place-items: center !important;
+  background: #fff !important;
+  overflow: hidden;
+}
+main [class*="card"] > [class*="img"] img,
+main [class*="card"] > [class*="thumb"] img,
+main [class*="card"] > [class*="media"] img,
+main [class*="card"] > [class*="photo"]:not(.tm-photo) img,
+main .ph-img:not(.big) img {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 170px !important;
+  object-fit: contain !important;
+}
