@@ -1088,8 +1088,8 @@ main [class*="card"] > [class*="thumb"] img,
 main [class*="card"] > [class*="media"] img,
 main [class*="card"] > [class*="photo"]:not(.tm-photo) img,
 main .ph-img:not(.big) img {
-  width: 100% !important;
-  height: 100% !important;
+  width: 7% !important;
+  height: 70% !important;
   max-height: 150px !important;
   object-fit: contain !important;
 }
