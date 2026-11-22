@@ -1050,7 +1050,7 @@ main [class*="card"] > [class*="media"],
 main [class*="card"] > [class*="photo"]:not(.tm-photo),
 main .ph-img:not(.big) {
   aspect-ratio: 4 / 3 !important;
-  max-height: 120px !important;
+  max-height: 110px !important;
   height: auto !important;
   display: grid !important;
   place-items: center !important;
@@ -1064,6 +1064,6 @@ main [class*="card"] > [class*="photo"]:not(.tm-photo) img,
 main .ph-img:not(.big) img {
   width: 100% !important;
   height: 100% !important;
-  max-height: 120px !important;
+  max-height: 110px !important;
   object-fit: contain !important;
 }
