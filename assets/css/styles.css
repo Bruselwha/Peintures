@@ -1060,7 +1060,7 @@ input.invalid, textarea.invalid, select.invalid { border-color: var(--bad) !impo
   width: 100% !important;                /* ocupa todo el ancho disponible */
   height: auto !important;
   max-width: 100% !important;
-  max-height: min(62vh, 560px) !important;  /* antes 46vh / 420px */
+  max-height: min(72vh, 650px) !important;  /* antes 46vh / 420px */
   object-fit: contain !important;        /* entera y sin deformar */
   margin: 0 auto;
 }
