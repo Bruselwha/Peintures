@@ -1064,3 +1064,32 @@ input.invalid, textarea.invalid, select.invalid { border-color: var(--bad) !impo
   object-fit: contain !important;        /* entera y sin deformar */
   margin: 0 auto;
 }
+
+/* ==== Fondo del catálogo un tono más oscuro: las tarjetas blancas destacan ==== */
+body:has(.cat-block),
+body:has(.cat-quick-btn) {
+  --cat-field: #e8e5f1; /* ← el tono del fondo: ajústalo aquí (más oscuro #ddd8ea · más claro #efecf6) */
+  background:
+    radial-gradient(1100px 520px at 88% -8%, #f1eef8 0%, rgba(241, 238, 248, 0) 62%),
+    radial-gradient(900px 480px at -12% 34%, #e2ddf0 0%, rgba(226, 221, 240, 0) 58%),
+    var(--cat-field) !important;
+  scrollbar-color: #6d28d9 var(--cat-field);
+  scrollbar-width: thin;
+}
+/* que ninguna capa interna tape el fondo nuevo */
+body:has(.cat-block) main,
+body:has(.cat-block) .cat-block,
+body:has(.cat-block) .wrap {
+  background: transparent !important;
+}
+/* scrollbar con el idioma visual del catálogo */
+body:has(.cat-block)::-webkit-scrollbar { width: 10px; }
+body:has(.cat-block)::-webkit-scrollbar-track { background: var(--cat-field); }
+body:has(.cat-block)::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #7c3aed, #5b21b6);
+  border-radius: 999px;
+  border: 2px solid var(--cat-field);
+}
+body:has(.cat-block)::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #6d28d9, #4c1d95);
+}
