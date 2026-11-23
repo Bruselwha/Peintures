@@ -1122,3 +1122,23 @@ body:has(.cat-block)::-webkit-scrollbar-thumb {
 body:has(.cat-block)::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #6d28d9, #4c1d95);
 }
+
+/* ==== Popups QUALITÉ ET CONFIANCE: la imagen cubre todo el marco ==== */
+.sq-modal-img {
+  width: 100%;
+  aspect-ratio: 2.42 / 1;      /* el marco exacto de tu captura: 866 × 358 */
+  overflow: hidden;
+  border-radius: 14px;
+  background: #f3f2f7;
+  display: block;
+}
+.sq-modal-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;           /* cubre el marco completo: adiós franjas */
+  object-position: center;     /* recorte centrado, nunca deformada */
+  display: block;
+}
+@media (max-width: 720px) {
+  .sq-modal-img { aspect-ratio: 4 / 3; }  /* marco móvil */
+}
