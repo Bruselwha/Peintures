@@ -1204,3 +1204,8 @@ body:has(.cat-block)::-webkit-scrollbar-thumb:hover {
 }
 .card-carousel .cc-dot.on { background: #6d28d9; transform: scale(1.25); }
 @media (prefers-reduced-motion: reduce) { .card-carousel .cc-track { transition: none; } }
+
+/* ==== Sin idioma árabe en el selector ==== */
+.lang-dd-menu [data-lang="ar"],
+.lang-dd-menu [data-value="ar"],
+.lang-dd-menu [data-code="ar"] { display: none !important; }
