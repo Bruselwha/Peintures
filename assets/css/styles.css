@@ -1093,3 +1093,32 @@ body:has(.cat-block)::-webkit-scrollbar-thumb {
 body:has(.cat-block)::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #6d28d9, #4c1d95);
 }
+
+/* ==== Fondo del catálogo: un tono más claro, tarjetas aún destacadas ==== */
+body:has(.cat-block),
+body:has(.cat-quick-btn) {
+  --cat-field: #efedf6; /* ← el tono del fondo: más claro #f5f3fa · un punto más oscuro #e8e5f1 */
+  background:
+    radial-gradient(1100px 520px at 88% -8%, #f7f4fc 0%, rgba(247, 244, 252, 0) 62%),
+    radial-gradient(900px 480px at -12% 34%, #e9e5f4 0%, rgba(233, 229, 244, 0) 58%),
+    var(--cat-field) !important;
+  scrollbar-color: #6d28d9 var(--cat-field);
+  scrollbar-width: thin;
+}
+/* que ninguna capa interna tape el fondo */
+body:has(.cat-block) main,
+body:has(.cat-block) .cat-block,
+body:has(.cat-block) .wrap {
+  background: transparent !important;
+}
+/* scrollbar con el idioma visual del catálogo */
+body:has(.cat-block)::-webkit-scrollbar { width: 10px; }
+body:has(.cat-block)::-webkit-scrollbar-track { background: var(--cat-field); }
+body:has(.cat-block)::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #7c3aed, #5b21b6);
+  border-radius: 999px;
+  border: 2px solid var(--cat-field);
+}
+body:has(.cat-block)::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #6d28d9, #4c1d95);
+}
