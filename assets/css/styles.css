@@ -1167,3 +1167,40 @@ body:has(.cat-block)::-webkit-scrollbar-thumb:hover {
   .cw-modal .sq-modal-img,
   .sq-modal-img { aspect-ratio: 4 / 3 !important; }  /* marco móvil */
 }
+
+/* ==== Carrusel de imágenes en las tarjetas del catálogo ==== */
+.card-carousel { position: relative; display: block !important; overflow: hidden; }
+.card-carousel .cc-track {
+  display: flex; height: 100%;
+  transition: transform .34s cubic-bezier(.22, .61, .36, 1);
+  will-change: transform;
+}
+.card-carousel .cc-slide { flex: 0 0 100%; height: 100%; display: grid; place-items: center; background: #fff; }
+.card-carousel .cc-slide img { width: 100%; height: 100%; object-fit: contain; }
+.card-carousel .cc-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 28px; height: 28px; border-radius: 999px;
+  border: 1px solid var(--line-2, #e6e3ef);
+  background: rgba(255, 255, 255, .92); color: var(--ink, #241a3c);
+  font-size: 19px; line-height: 1; display: grid; place-items: center;
+  cursor: pointer; opacity: 0; z-index: 3;
+  transition: opacity .2s ease, background .2s ease;
+  box-shadow: 0 6px 16px -10px rgba(23, 15, 60, .5);
+}
+.card-carousel:hover .cc-arrow,
+.card-carousel:focus-within .cc-arrow { opacity: 1; }
+@media (hover: none) { .card-carousel .cc-arrow { opacity: .85; } } /* móvil: siempre visibles */
+.card-carousel .cc-prev { left: 8px; }
+.card-carousel .cc-next { right: 8px; }
+.card-carousel .cc-arrow:hover { background: #fff; }
+.card-carousel .cc-dots {
+  position: absolute; left: 0; right: 0; bottom: 6px;
+  display: flex; justify-content: center; gap: 6px; z-index: 3;
+}
+.card-carousel .cc-dot {
+  width: 7px; height: 7px; border-radius: 999px; border: 0; padding: 0;
+  background: rgba(36, 26, 60, .25); cursor: pointer;
+  transition: transform .2s ease, background .2s ease;
+}
+.card-carousel .cc-dot.on { background: #6d28d9; transform: scale(1.25); }
+@media (prefers-reduced-motion: reduce) { .card-carousel .cc-track { transition: none; } }
