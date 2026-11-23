@@ -1065,13 +1065,13 @@ input.invalid, textarea.invalid, select.invalid { border-color: var(--bad) !impo
   margin: 0 auto;
 }
 
-/* ==== Fondo del catálogo: un tono más claro, tarjetas aún destacadas ==== */
+/* ==== Fondo del catálogo: un tono más claro, acabado luminoso ==== */
 body:has(.cat-block),
 body:has(.cat-quick-btn) {
-  --cat-field: #efedf6; /* ← el tono del fondo: más claro #f5f3fa · un punto más oscuro #e8e5f1 */
+  --cat-field: #f4f2f9; /* ← el tono del fondo: casi blanco #f9f7fc · un punto más oscuro #efedf6 */
   background:
-    radial-gradient(1100px 520px at 88% -8%, #f7f4fc 0%, rgba(247, 244, 252, 0) 62%),
-    radial-gradient(900px 480px at -12% 34%, #e9e5f4 0%, rgba(233, 229, 244, 0) 58%),
+    radial-gradient(1100px 520px at 88% -8%, #fbf9fe 0%, rgba(251, 249, 254, 0) 62%),
+    radial-gradient(900px 480px at -12% 34%, #f0edf7 0%, rgba(240, 237, 247, 0) 58%),
     var(--cat-field) !important;
   scrollbar-color: #6d28d9 var(--cat-field);
   scrollbar-width: thin;
