@@ -1143,22 +1143,27 @@ body:has(.cat-block)::-webkit-scrollbar-thumb:hover {
   .sq-modal-img { aspect-ratio: 4 / 3; }  /* marco móvil */
 }
 
-/* ==== QUALITÉ ET CONFIANCE: una sola imagen cubre ambos marcos ==== */
+/* ==== QUALITÉ ET CONFIANCE: la foto llena el marco SIEMPRE (móvil y PC) ==== */
+.cw-modal .sq-modal-img,
 .sq-modal-img {
   width: 100%;
-  aspect-ratio: 2.42 / 1;          /* marco escritorio, como tu captura */
+  height: auto !important;          /* anula la altura fija en vh del CSS original */
+  max-height: none !important;
+  aspect-ratio: 2.42 / 1 !important; /* marco escritorio, como tu captura */
   overflow: hidden;
   border-radius: 14px;
   background: #f3f2f7;
   display: block;
 }
+.cw-modal .sq-modal-img img,
 .sq-modal-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;               /* llena el marco entero con una sola foto */
-  object-position: center;         /* recorte centrado: el sujeto siempre visible */
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;      /* cubre el marco completo: adiós bandas */
+  object-position: center !important;
   display: block;
 }
 @media (max-width: 720px) {
-  .sq-modal-img { aspect-ratio: 4 / 3; }   /* marco móvil */
+  .cw-modal .sq-modal-img,
+  .sq-modal-img { aspect-ratio: 4 / 3 !important; }  /* marco móvil */
 }
