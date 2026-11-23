@@ -1065,18 +1065,18 @@ input.invalid, textarea.invalid, select.invalid { border-color: var(--bad) !impo
   margin: 0 auto;
 }
 
-/* ==== Fondo del catálogo un tono más oscuro: las tarjetas blancas destacan ==== */
+/* ==== Fondo del catálogo: un tono más claro, tarjetas aún destacadas ==== */
 body:has(.cat-block),
 body:has(.cat-quick-btn) {
-  --cat-field: #e8e5f1; /* ← el tono del fondo: ajústalo aquí (más oscuro #ddd8ea · más claro #efecf6) */
+  --cat-field: #efedf6; /* ← el tono del fondo: más claro #f5f3fa · un punto más oscuro #e8e5f1 */
   background:
-    radial-gradient(1100px 520px at 88% -8%, #f1eef8 0%, rgba(241, 238, 248, 0) 62%),
-    radial-gradient(900px 480px at -12% 34%, #e2ddf0 0%, rgba(226, 221, 240, 0) 58%),
+    radial-gradient(1100px 520px at 88% -8%, #f7f4fc 0%, rgba(247, 244, 252, 0) 62%),
+    radial-gradient(900px 480px at -12% 34%, #e9e5f4 0%, rgba(233, 229, 244, 0) 58%),
     var(--cat-field) !important;
   scrollbar-color: #6d28d9 var(--cat-field);
   scrollbar-width: thin;
 }
-/* que ninguna capa interna tape el fondo nuevo */
+/* que ninguna capa interna tape el fondo */
 body:has(.cat-block) main,
 body:has(.cat-block) .cat-block,
 body:has(.cat-block) .wrap {
