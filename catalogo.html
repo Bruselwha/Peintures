@@ -2,6 +2,43 @@
 <html lang="es" dir="ltr">
 <head>
 <meta charset="utf-8">
+  <script>/* Francés como idioma principal — método sin búsquedas */
+(function () {
+  var WANT = 'fr';
+  var KEYS = ['cw-lang', 'cw_lang', 'lang', 'idioma', 'locale', 'app-lang', 'cw.locale'];
+  try {
+    document.documentElement.lang = WANT;
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (/lang|idioma|locale/i.test(k) && KEYS.indexOf(k) === -1) KEYS.push(k);
+    }
+    var chosen = sessionStorage.getItem('cw_lang_choice');
+    if (!chosen) KEYS.forEach(function (k) {
+      var v = (localStorage.getItem(k) || '').replace(/["']/g, '');
+      if (!v || v === 'es' || v === 'ar') localStorage.setItem(k, WANT);
+    });
+    document.addEventListener('click', function (e) {
+      var t = e.target && e.target.closest ? e.target.closest('.lang-dd-menu li, .lang-dd-menu button, .lang-dd-menu [role="option"]') : null;
+      if (!t) return;
+      var v = (t.getAttribute('data-lang') || t.getAttribute('data-value') || t.getAttribute('data-code') || (t.textContent || '')).toLowerCase();
+      if (v.indexOf('fr') !== -1) sessionStorage.setItem('cw_lang_choice', 'fr');
+      else if (v.indexOf('es') !== -1) sessionStorage.setItem('cw_lang_choice', 'es');
+    }, true);
+    window.addEventListener('load', function () {
+      setTimeout(function () {
+        if (sessionStorage.getItem('cw_lang_choice') || sessionStorage.getItem('cw_fr_once')) return;
+        var btn = document.querySelector('.lang-dd-btn');
+        var label = btn ? (btn.textContent || '') : '';
+        if (/\bES\b|Español/i.test(label)) {
+          KEYS.forEach(function (k) { localStorage.setItem(k, WANT); });
+          sessionStorage.setItem('cw_fr_once', '1');
+          location.reload();
+        }
+      }, 500);
+    });
+  } catch (e) {}
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Catálogo · Arij Color</title>
 <meta name="description" content="Consulta el catálogo y haz tu pedido por WhatsApp.">
