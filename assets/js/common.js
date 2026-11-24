@@ -668,3 +668,35 @@
     new MutationObserver(function () { clearTimeout(t); t = setTimeout(scan, 250); }).observe(document.body, { childList: true, subtree: true });
   }
 })();
+
+/* ==== Chip "Voir le site" en las tarjetas de portfolio ==== */
+(function () {
+  function cards() {
+    return [].slice.call(document.querySelectorAll('main [class*="card"]')).filter(function (c) {
+      return c.querySelector('img') && c.querySelector('a');
+    });
+  }
+  function build() {
+    cards().forEach(function (c) {
+      if (c.dataset.webchip) return;
+      var existing = c.querySelector('a[href^="http"]');
+      if (existing) { c.dataset.webchip = '1'; existing.classList.add('port-web'); return; }
+      var url = c.getAttribute('data-portfolio') || c.getAttribute('data-url') || c.getAttribute('data-web') || '';
+      if (!url) return;
+      c.dataset.webchip = '1';
+      var a = document.createElement('a');
+      a.className = 'port-web';
+      a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      a.textContent = '🌐 ' + url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+      c.appendChild(a);
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build);
+  build();
+  window.addEventListener('load', build);
+  setTimeout(build, 700); setTimeout(build, 2000);
+  if ('MutationObserver' in window) {
+    var t = null;
+    new MutationObserver(function () { clearTimeout(t); t = setTimeout(build, 250); }).observe(document.body, { childList: true, subtree: true });
+  }
+})();
