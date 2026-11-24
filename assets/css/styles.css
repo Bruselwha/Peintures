@@ -1209,3 +1209,21 @@ body:has(.cat-block)::-webkit-scrollbar-thumb:hover {
 .lang-dd-menu [data-lang="ar"],
 .lang-dd-menu [data-value="ar"],
 .lang-dd-menu [data-code="ar"] { display: none !important; }
+
+/* ==== Portfolio: la foto de la tarjeta llena el marco en móvil y PC ==== */
+main [class*="pf-"]:has(> img),
+main [class*="port-"]:has(> img),
+main [class*="work"]:has(> img),
+main [class*="realisation"]:has(> img) {
+  overflow: hidden;
+}
+main [class*="pf-"] img,
+main [class*="port-"] img,
+main [class*="work"] img,
+main [class*="realisation"] img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;   /* cubre el marco completo: adiós bandas */
+  object-position: center !important;
+  display: block;
+}
